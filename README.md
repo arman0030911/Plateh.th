@@ -3,7 +3,7 @@
 Aylık ve tek seferlik ödemeler için iOS borç/ödeme takip uygulaması.
 
 ## Ekran Görüntüleri
-*(Simülatörden ekran görüntüleri ekleyin: resimleri editöre sürükleyin)*
+
 
 ## Mimari
 - **Clean Architecture** (Domain, Data, Presentation katmanları)
