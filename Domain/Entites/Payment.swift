@@ -27,7 +27,7 @@ struct Payment: Identifiable, Hashable {
     
     var remainingAmount: Double {
         switch type {
-        case .mounthly:
+        case .monthly:
             return max(storedRemainingAmount ?? totalAmount, 0)
         case .oneTime:
             return lastPay == nil ? totalAmount : 0
@@ -40,7 +40,7 @@ struct Payment: Identifiable, Hashable {
 
     var isPaid: Bool {
         switch type {
-        case .mounthly:
+        case .monthly:
             guard !isClosed else { return true }
             guard let lastPayDate else { return false }
             return Calendar.current.isDate(lastPayDate, equalTo: .now, toGranularity: .month)

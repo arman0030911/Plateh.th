@@ -46,7 +46,7 @@ final class PaymentMapperTests: XCTestCase {
         let entity = PaymentEntitly(context: context)
         entity.id = "test-123"
         entity.title = "Test Payment"
-        entity.type = 0 // mounthly
+        entity.type = 0 // monthly
         entity.paymentAmount = 100
         entity.totalAmount = 1000
         entity.isNotificationEnables = true
@@ -131,7 +131,7 @@ final class PaymentMapperTests: XCTestCase {
         // Given
         let invalidPayment = Payment(
             id: "test-000",
-            type: .mounthly,
+            type: .monthly,
             title: "Invalid",
             description: "",
             paymentAmount: 0,

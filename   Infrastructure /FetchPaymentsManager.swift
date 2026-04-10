@@ -14,10 +14,23 @@ class FetchPaymentsManager: FetchPaymentDataSource {
             var predicates: [NSPredicate] = []
             
             if let date {
-                let predicate = NSPredicate(format: "lastPay >= %@ AND lastPay <= %@",
-                    date.startOfMonth as NSDate,
-                    date.endOfMonth as NSDate)
-                predicates.append(predicate)
+                let startOfMonth = date.startOfMonth as NSDate
+                let endOfMonth = date.endOfMonth as NSDate
+                let monthlyPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    NSPredicate(format: "type == %d", PayType.monthly.rawValue),
+                    NSPredicate(format: "dueDay >= %d AND dueDay <= %d", 1, date.endOfMonth.dayNumber),
+                ])
+                let oneTimePredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    NSPredicate(format: "type == %d", PayType.oneTime.rawValue),
+                    NSPredicate(format: "dueDate >= %@ AND dueDate <= %@", startOfMonth, endOfMonth),
+                ])
+
+                predicates.append(
+                    NSCompoundPredicate(orPredicateWithSubpredicates: [
+                        monthlyPredicate,
+                        oneTimePredicate,
+                    ])
+                )
             }
 
             if !includeClosed {

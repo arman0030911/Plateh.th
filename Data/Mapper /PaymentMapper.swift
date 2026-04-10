@@ -17,8 +17,8 @@ struct PaymentMapper {
     }()
     
     static func toDomain(from enitie: PaymentEntitly) -> Payment {
-        let id = (enitie.id?.isEmpty == false) ? enitie.id! : UUID().uuidString
-        let type = PayType(rawValue: Int(enitie.type)) ?? .mounthly
+        let id = enitie.id ?? UUID().uuidString
+        let type = PayType(rawValue: Int(enitie.type)) ?? .monthly
         let title = enitie.title ?? ""
         let descriptionText = enitie.descriptionText ?? ""
         let paymentAmount = enitie.paymentAmount?.doubleValue ?? 0

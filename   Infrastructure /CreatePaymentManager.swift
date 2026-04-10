@@ -1,5 +1,5 @@
 //
-//   CraatePaymentManager.swift
+//  CreatePaymentManager.swift
 //  Plateh.th
 //
 //  Created by Adis on 14.03.2026.
@@ -19,13 +19,11 @@ class CreatePaymentManager: CreatePaymentDataSource {
             // Создаем и заполняем сущность Core Data
             let entity = PaymentMapper.toEntitie(from: payment, context: context)
             // Сохраняем контекст
-            if context.hasChanges {
-                do {
-                    try context.save()
-                    savedPayment = PaymentMapper.toDomain(from: entity)
-                } catch {
-                    thrownError = error
-                }
+            do {
+                try context.save()
+                savedPayment = PaymentMapper.toDomain(from: entity)
+            } catch {
+                thrownError = error
             }
         }
 

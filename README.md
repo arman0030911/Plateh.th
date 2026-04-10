@@ -17,7 +17,7 @@ Aylık ve tek seferlik ödemeler için iOS borç/ödeme takip uygulaması.
 - Swift Concurrency (async/await)
 
 ## Özellikler
-- ✅ Ödeme ekleme (aylık/tek seferlik - mounthly/oneTime)
+- ✅ Ödeme ekleme (aylık/tek seferlik - monthly/oneTime)
 - ✅ Kalan borç miktarını takip etme
 - ✅ Ödeme bildirimleri
 - ✅ Yerel veri depolama (Core Data)

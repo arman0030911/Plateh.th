@@ -9,6 +9,6 @@ import Foundation
 
 
 enum PayType: Int, Hashable {
-    case mounthly = 0
+    case monthly = 0
     case oneTime = 1
 }

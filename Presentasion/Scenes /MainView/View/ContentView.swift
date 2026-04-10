@@ -2,8 +2,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State var isShowAddView: Bool = false 
-    @State var payType: PayType = .mounthly
-    @StateObject var viewModel = Assembly.createMAinViewModel()
+    @State var payType: PayType = .monthly
+    @StateObject var viewModel = Assembly.createMainViewModel()
     @Binding var path: NavigationPath
 
     private var totalDebtText: String {
@@ -31,8 +31,8 @@ struct ContentView: View {
                     
                     VStack(alignment:.leading, spacing: 19){ 
                         switch payType {
-                            case .mounthly:
-                                paymentsList(for: .mounthly)
+                            case .monthly:
+                                paymentsList(for: .monthly)
                             case .oneTime:
                                 paymentsList(for: .oneTime)
                         }
@@ -65,8 +65,8 @@ extension ContentView {
 
         if filteredPayments.isEmpty {
             EmptyPaymentsView(
-                title: type == .mounthly ? "Aylik odeme yok" : "Tek seferlik odeme yok",
-                subtitle: type == .mounthly
+                title: type == .monthly ? "Aylik odeme yok" : "Tek seferlik odeme yok",
+                subtitle: type == .monthly
                     ? "Yeni bir kart ekleyip duzenli odemelerini buradan takip edebilirsin."
                     : "Tek seferlik odemeler burada gorunecek."
             )

@@ -28,7 +28,7 @@ struct PaymentCards: View  {
 
     private var amountLabelText: String {
         switch payment.type {
-        case .mounthly:
+        case .monthly:
             return "/ ay"
         case .oneTime:
             return "/ tek ödeme"
@@ -47,7 +47,7 @@ struct PaymentCards: View  {
                         HStack(spacing: 5){
                             Text(subtitleText)
                                 .font(.appCaption(12))
-                            if payment.type == .mounthly {
+                            if payment.type == .monthly {
                                 Text("•")
                                     .font(.appCaption(12))
                                 Text("Toplam \(payment.totalAmount.currencyText)")
@@ -67,7 +67,7 @@ struct PaymentCards: View  {
                 
                 HStack {
                     HStack(spacing: 5){
-                        Text((payment.type == .mounthly ? payment.paymentAmount : payment.totalAmount).currencyText)
+                        Text((payment.type == .monthly ? payment.paymentAmount : payment.totalAmount).currencyText)
                             .font(.appTitle(18))
                         Text(amountLabelText)
                             .font(.appCaption(14))

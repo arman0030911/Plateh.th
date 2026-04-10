@@ -27,154 +27,132 @@ struct DetailsView: View {
         }
         return payment.description
     }
+
+    private func shouldShowRemainingAmount(for payment: Payment) -> Bool {
+        payment.type == .monthly && payment.totalAmount > payment.paymentAmount
+    }
     
     var body: some View {
-        if let payment = viewModel.payment {
-            let status = PaymentStatus(payment: payment)
-            VStack(alignment:.leading, spacing: 22){
-                header
-                
-                VStack(alignment:.leading){
-                    VStack(alignment:.leading, spacing: 2){
-                        Text(payment.totalAmount.currencyText)
-                            .font(.appDisplay(28))
-                            .foregroundStyle(.white)
-                        Text(payment.title)
-                            .font(.appTitle(18))
-                            .foregroundStyle(accentColor(for: payment))
-                        
-                    }
-                    .padding(.vertical, 18)
+        Group {
+            if let payment = viewModel.payment {
+                let status = PaymentStatus(payment: payment)
+                VStack(alignment:.leading, spacing: 22){
+                    header
                     
-                }
-               .navigationBarBackButtonHidden(true)
-                VStack(alignment:.leading, spacing: 26){
-                    
-                VStack(alignment: .leading, spacing: 17) {
-                    HStack(spacing: 16){
-                        if payment.type == .mounthly {
-                            InfoTagsView(text:"Kalan \(payment.remainingAmount.currencyText)")
-                            InfoTagsView(text:"Aylık \(payment.paymentAmount.currencyText)")
-                        } else {
-                            InfoTagsView(text:"Toplam \(payment.totalAmount.currencyText)")
+                    VStack(alignment:.leading){
+                        VStack(alignment:.leading, spacing: 2){
+                            Text(payment.totalAmount.currencyText)
+                                .font(.appDisplay(28))
+                                .foregroundStyle(.white)
+                            Text(payment.title)
+                                .font(.appTitle(18))
+                                .foregroundStyle(accentColor(for: payment))
+                            
                         }
+                        .padding(.vertical, 18)
                         
                     }
-                    Text(infoText(for: payment))
-                        .font(.appBody(14))
-                        .foregroundStyle(.appMint)
-                }
-                    
-                VStack(alignment: .leading, spacing: 20){
+                   .navigationBarBackButtonHidden(true)
+                    VStack(alignment:.leading, spacing: 26){
+                        
+                    VStack(alignment: .leading, spacing: 17) {
+                        HStack(spacing: 16){
+                            if payment.type == .monthly {
+                                if shouldShowRemainingAmount(for: payment) {
+                                    InfoTagsView(text:"Kalan \(payment.remainingAmount.currencyText)")
+                                }
+                                InfoTagsView(text:"Aylık \(payment.paymentAmount.currencyText)")
+                            } else {
+                                InfoTagsView(text:"Toplam \(payment.totalAmount.currencyText)")
+                            }
+                            
+                        }
+                        Text(infoText(for: payment))
+                            .font(.appBody(14))
+                            .foregroundStyle(.appMint)
+                    }
+                        
+                    VStack(alignment: .leading, spacing: 20){
+                            Divider()
+                                .background(.appGray)
+                        
+                        
+                        HStack(spacing: 5){
+                            Text(status.detailsTitle)
+                                .font(.appBody(14))
+                                .foregroundStyle(accentColor(for: payment))
+                                .offset(y: -3)
+                            Spacer()
+                            
+                            HStack(spacing: 4){
+                                Text(status.detailsStateText)
+                                    .font(.appCaption(12))
+                                Text(status.detailsDateText)
+                                    .font(.appCaption(12))
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(status.accentColor)
+                            .clipShape(Capsule())
+                        }
+                        .padding(.horizontal, 10)
+                        
                         Divider()
                             .background(.appGray)
-                    
-                    
-                    HStack(spacing: 5){ 
                         
-                        switch payment.type {
-                            case .mounthly:
-                                Text(status.detailsTitle)
-                                    .font(.appBody(14))
-                                    .foregroundStyle(accentColor(for: payment))
-                                    .offset(y: -3)
-                                Spacer()
-                                
-                                HStack(spacing: 4){
-                                    Text(status.detailsStateText)
-                                        .font(.appCaption(12))
-                                    Text(status.detailsDateText)
-                                        .font(.appCaption(12))
-                                }
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(status.accentColor)
-                                .clipShape(Capsule())
-                            case .oneTime:
-                                Text(status.detailsTitle)
-                                    .font(.appBody(14))
-                                    .foregroundStyle(accentColor(for: payment))
-                                    .offset(y: -3)
-                                Spacer()
-                                
-                                HStack(spacing: 4){
-                                    Text(status.detailsStateText)
-                                        .font(.appCaption(12))
-                                    Text(status.detailsDateText)
-                                        .font(.appCaption(12))
-                                }
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
-                                .background(status.accentColor)
-                                .clipShape(Capsule())
+                        HStack{
+                            Text("Ödeme bildirimi")
+                                .font(.appBody(14))
+                                .foregroundStyle(accentColor(for: payment))
+                                .offset(y: -4)
+                            Spacer()
+                            RadioButtonView(isSelected: $isNotificationSelected)
                         }
-                
+                        .padding(.horizontal, 10)
+                    
                         
-                        
-                        
-                    }
-                    .padding(.horizontal, 10)
-                    
-                    Divider()
-                        .background(.appGray)
-                    
-                    HStack{
-                        Text("Ödeme bildirimi")
-                            .font(.appBody(14))
-                            .foregroundStyle(accentColor(for: payment))
-                            .offset(y: -4)
-                        Spacer()
-                        RadioButtonView(isSelected: $isNotificationSelected)
-                    }
-                    .padding(.horizontal, 10)
-                
-                    
-                    } 
-                    
-                }
-
-                
-
-                
-                Spacer()
-                
-            
-                VStack(alignment:.leading, spacing: 18) {
-                    if payment.isClosed {
-                        SolidButton(
-                            text: "Ödeme tamamlandı",
-                            solidColor: .appMint.opacity(0.35),
-                            backRoundColor: .clear,
-                            textColor: .appMint
-                        )
-                        .disabled(true)
-                    } else {
-                        SolidButton(text: "Borcu kapat", solidColor: .appYelow, textColor: .appBlack, isFull: true) {
-                            viewModel.closePayment(id: payment.id)
                         }
+                        
                     }
 
-                    SolidButton(text:"Son ödemeyi sil", solidColor:.appYelow, textColor: .appYelow) {
-                        viewModel.removeLastPayment(id: payment.id)
+                    Spacer()
+                    
+                    VStack(alignment:.leading, spacing: 18) {
+                        if payment.isClosed {
+                            SolidButton(
+                                text: "Ödeme tamamlandı",
+                                solidColor: .appMint.opacity(0.35),
+                                backRoundColor: .clear,
+                                textColor: .appMint
+                            )
+                            .disabled(true)
+                        } else {
+                            SolidButton(text: "Borcu kapat", solidColor: .appYelow, textColor: .appBlack, isFull: true) {
+                                viewModel.closePayment(id: payment.id)
+                            }
+                        }
+
+                        SolidButton(text:"Son ödemeyi sil", solidColor:.appYelow, textColor: .appYelow) {
+                            viewModel.removeLastPayment(id: payment.id)
+                        }
+                        .disabled(payment.lastPay == nil)
+                        .opacity(payment.lastPay == nil ? 0.5 : 1)
                     }
-                    .disabled(payment.lastPay == nil)
-                    .opacity(payment.lastPay == nil ? 0.5 : 1)
                 }
-            }
-            .padding(.horizontal,20)
-            .background(.appBlack)
-            .onAppear {
-                isNotificationSelected = payment.isNotificationEnabled
-                viewModel.loadPayment(id: paymentId)
-            }
-            .onChange(of: isNotificationSelected) { _, newValue in
-                viewModel.updateNotification(id: payment.id, isEnabled: newValue)
-            }
-        } else {
-            ProgressView()
+                .padding(.horizontal,20)
+                .background(.appBlack)
                 .onAppear {
-                    viewModel.loadPayment(id: paymentId)
+                    isNotificationSelected = payment.isNotificationEnabled
                 }
+                .onChange(of: isNotificationSelected) { _, newValue in
+                    viewModel.updateNotification(id: payment.id, isEnabled: newValue)
+                }
+            } else {
+                ProgressView()
+            }
+        }
+        .task(id: paymentId) { @MainActor in
+            viewModel.loadPayment(id: paymentId)
         }
     }
 }
@@ -232,6 +210,7 @@ extension DetailsView{
     }
 }
 
+@MainActor
 class DetailsViewModel: ObservableObject {
     @Published var payment: Payment?
     private let fetchUseCase: FetchPaymentsUseCase

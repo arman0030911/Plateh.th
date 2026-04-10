@@ -28,7 +28,7 @@ final class NotificationManager {
         let center = UNUserNotificationCenter.current()
         let content = UNMutableNotificationContent()
         content.title = payment.title
-        content.body = payment.type == .mounthly
+        content.body = payment.type == .monthly
             ? "Bugun odeme gunu."
             : "Odeme tarihi yaklasti."
         content.sound = .default
@@ -61,7 +61,7 @@ final class NotificationManager {
         let calendar = Calendar.current
 
         switch payment.type {
-        case .mounthly:
+        case .monthly:
             let dueDay = payment.dueDay ?? Date.fromISO8601(payment.dueDate)?.dayNumber ?? 1
             var components = DateComponents()
             components.calendar = calendar

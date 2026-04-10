@@ -5,7 +5,7 @@ protocol CreatePaymentUseCase: AnyObject {
     func execute(payment: Payment) throws
 }
 
-class CreatePaymentUseCaseImp: CreatePaymentUseCase {
+class CreatePaymentUseCaseImpl: CreatePaymentUseCase {
     
     private let repository: CreatePaymentRepository 
     init(repository: CreatePaymentRepository) {

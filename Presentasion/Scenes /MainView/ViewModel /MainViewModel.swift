@@ -20,7 +20,7 @@ class MainViewModel: ObservableObject {
 
     var monthlyDebt: Double {
         payments
-            .filter { $0.type == .mounthly }
+            .filter { $0.type == .monthly }
             .map(\.remainingAmount)
             .reduce(0, +)
     }

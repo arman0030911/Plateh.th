@@ -23,7 +23,7 @@ class AddViewModel: ObservableObject {
     }()
 
     @Published var isNotificationSelected: Bool = false
-    @Published var payType: PayType = .mounthly
+    @Published var payType: PayType = .monthly
 
     @Published var isShowCalendar = false
     @Published var isAdded: Bool = false
@@ -52,7 +52,7 @@ class AddViewModel: ObservableObject {
             return "Toplam tutar 0'dan buyuk olmali."
         }
 
-        if payType == .mounthly {
+        if payType == .monthly {
             if monthly <= 0 {
                 return "Aylik odeme girmen gerekiyor."
             }
@@ -73,7 +73,7 @@ class AddViewModel: ObservableObject {
             let dayComponent = Calendar.current.component(.day, from: date)
             let parsedTotalAmount = totalAmount.parsedAmountValue
             let monthlyAmount = max(paymanetAmount.parsedAmountValue, 0)
-            let parsedPaymentAmount = payType == .mounthly
+            let parsedPaymentAmount = payType == .monthly
                 ? (monthlyAmount > 0 ? monthlyAmount : parsedTotalAmount)
                 : parsedTotalAmount
 

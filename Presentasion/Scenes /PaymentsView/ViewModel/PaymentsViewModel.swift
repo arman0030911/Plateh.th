@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import SwiftUI
 
+@MainActor
 class PaymentsViewModel: ObservableObject { 
     @Published var payments: [Payment] = []
     @Published var date: Date? = .now {

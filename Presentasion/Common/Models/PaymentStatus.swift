@@ -34,7 +34,7 @@ struct PaymentStatus {
         isClosed = payment.isClosed
 
         switch payment.type {
-        case .mounthly:
+        case .monthly:
             isPaid = isClosed || isMonthlyPaidThisMonth
             detailsTitle = "Sonraki ödeme"
         case .oneTime:
@@ -51,7 +51,7 @@ struct PaymentStatus {
             badgeTitle = "Durum"
             badgeValue = "Tamamlandı"
         } else if isPaid {
-            badgeTitle = payment.type == .mounthly ? "Bu ay" : "Durum"
+            badgeTitle = payment.type == .monthly ? "Bu ay" : "Durum"
             badgeValue = "Ödendi"
         } else {
             badgeTitle = "Öde"

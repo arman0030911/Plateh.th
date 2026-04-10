@@ -7,7 +7,7 @@ struct MainViewContentHeader: View {
 
     private var payTypeLabel: String {
         switch payType {
-        case .mounthly:
+        case .monthly:
             return "Aylık ödemeler"
         case .oneTime:
             return "Tek seferlik ödemeler"
@@ -15,7 +15,7 @@ struct MainViewContentHeader: View {
     }
 
     private var selectedTotal: String {
-        payType == .mounthly ? monthlyTotal : oneTimeTotal
+        payType == .monthly ? monthlyTotal : oneTimeTotal
     }
 
     var body: some View {
@@ -27,12 +27,12 @@ struct MainViewContentHeader: View {
                 Spacer()
                 HStack(spacing: 14){
                     Button { 
-                        payType = .mounthly
+                        payType = .monthly
                     } label: {
                         Text("Aylık")
                             .font(.appBody(12))
-                            .fontWeight(payType == .mounthly ? .bold : .regular)
-                            .foregroundStyle(payType == .mounthly ? .appYelow : .appGray)
+                            .fontWeight(payType == .monthly ? .bold : .regular)
+                            .foregroundStyle(payType == .monthly ? .appYelow : .appGray)
                     }
                     .buttonStyle(.plain)
                     
@@ -49,7 +49,7 @@ struct MainViewContentHeader: View {
             }
             
             HStack(spacing: 4){ 
-                Text(payType == .mounthly ? "Düzenli" : "Tek seferlik")
+                Text(payType == .monthly ? "Düzenli" : "Tek seferlik")
                     .font(.appTitle(18))
                 Text(payTypeLabel)
                     .font(.appCaption(13))

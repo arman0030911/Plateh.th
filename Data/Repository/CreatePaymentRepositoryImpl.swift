@@ -7,7 +7,7 @@
 
 import Foundation
 
-class CreatePaymentRepositoryImpt: CreatePaymentRepository{ 
+class CreatePaymentRepositoryImpl: CreatePaymentRepository{ 
     private let dataSource: CreatePaymentDataSource 
     init(dataSource: CreatePaymentDataSource) {
         self.dataSource = dataSource

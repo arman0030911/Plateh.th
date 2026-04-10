@@ -5,7 +5,7 @@ import CoreData
 
 
 class SetPaymentManager: SetPaymentDataSource { 
-    let contex = PersistentContainer.shared.persistentContainer.viewContext
+    let context = PersistentContainer.shared.persistentContainer.viewContext
 
     private let calendar = Calendar.current
 
@@ -17,63 +17,58 @@ class SetPaymentManager: SetPaymentDataSource {
     }
     
     func setPayment(payment: Payment) throws {
-        let req = PaymentEntitly.fetchRequest() 
-        req.predicate = NSPredicate(format: "id == %@", payment.id)
-        
-        let payment = try contex.fetch(req)
-        if let contexPayment = payment.first {
-            if contexPayment.isClosed {
-                return
-            }
-            if contexPayment.type == 0, (contexPayment.remainingAmount?.decimalValue ?? .zero) <= .zero {
-                return
-            }
-            if contexPayment.type == 0,
-               let lastPay = contexPayment.lastPay,
-               calendar.isDate(lastPay, equalTo: .now, toGranularity: .month) {
-                return
-            }
-            if contexPayment.type != 0, contexPayment.lastPay != nil {
-                return
-            }
+        var thrownError: Error?
+        var updatedPayment: Payment?
 
-            contexPayment.lastPay = .now 
-            
-            if contexPayment.type == 0 {
-                var remainingAmount = contexPayment.remainingAmount?.decimalValue
-                    ?? contexPayment.totalAmount?.decimalValue
-                    ?? .zero
-                let paymentAmount = contexPayment.paymentAmount?.decimalValue ?? .zero
-                remainingAmount -= paymentAmount
-                if remainingAmount < 0 { 
-                    contexPayment.remainingAmount = .zero
-  
-                } else { 
-                    contexPayment.remainingAmount = NSDecimalNumber(decimal: remainingAmount)
-                    
+        context.performAndWait {
+            let request = PaymentEntitly.fetchRequest() 
+            request.predicate = NSPredicate(format: "id == %@", payment.id)
+
+            do {
+                let fetched = try context.fetch(request)
+                guard let contextPayment = fetched.first else { return }
+
+                if contextPayment.isClosed {
+                    return
                 }
-                if (contexPayment.remainingAmount?.decimalValue ?? .zero) <= .zero {
-                    markClosed(contexPayment)
+
+                if contextPayment.type == PayType.monthly.rawValue,
+                   let lastPay = contextPayment.lastPay,
+                   calendar.isDate(lastPay, equalTo: .now, toGranularity: .month) {
+                    return
+                }
+
+                if contextPayment.type != PayType.monthly.rawValue, contextPayment.lastPay != nil {
+                    return
+                }
+
+                contextPayment.lastPay = .now
+
+                if contextPayment.type == PayType.monthly.rawValue {
+                    contextPayment.remainingAmount = contextPayment.totalAmount
+                    contextPayment.isClosed = false
+                    contextPayment.closeDate = nil
                 } else {
-                    contexPayment.isClosed = false
-                    contexPayment.closeDate = nil
+                    markClosed(contextPayment)
                 }
-                
-            } else { 
-                markClosed(contexPayment)
-                
-            }
-            
-            try contex.save()
 
-            let updatedPayment = PaymentMapper.toDomain(from: contexPayment)
+                try context.save()
+                updatedPayment = PaymentMapper.toDomain(from: contextPayment)
+            } catch {
+                thrownError = error
+            }
+        }
+
+        if let thrownError {
+            throw thrownError
+        }
+
+        if let updatedPayment {
             if updatedPayment.isClosed {
                 NotificationManager.shared.removeNotification(id: updatedPayment.id)
             } else {
                 NotificationManager.shared.scheduleNotification(for: updatedPayment)
             }
         }
-        
-        
     }
 }

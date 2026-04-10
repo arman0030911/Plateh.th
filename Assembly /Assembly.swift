@@ -1,7 +1,7 @@
 import Foundation
 
 class Assembly { 
-    static func createMAinViewModel() -> MainViewModel {
+    static func createMainViewModel() -> MainViewModel {
         let dataSource = FetchPaymentsManager()
         let repo = FetchPaymentsRepositoryImpl(dataSource:dataSource)
         let useCase = FetchPaymentsUseCaseImpl(repository:repo )
@@ -15,8 +15,8 @@ class Assembly {
     
     static func createAddViewModel() -> AddViewModel{
         let manager = CreatePaymentManager()
-        let repo = CreatePaymentRepositoryImpt(dataSource:manager)
-        let useCase = CreatePaymentUseCaseImp(repository: repo)
+        let repo = CreatePaymentRepositoryImpl(dataSource:manager)
+        let useCase = CreatePaymentUseCaseImpl(repository: repo)
         return AddViewModel(createUseCase: useCase )
     }
     

@@ -13,7 +13,13 @@ class DeletePaymentManager: DeletePaymentDataSource {
 
             do {
                 let result = try context.fetch(request)
-                guard let payment = result.first else { return }
+                guard let payment = result.first else {
+                    throw NSError(
+                        domain: "DeletePayment",
+                        code: 404,
+                        userInfo: [NSLocalizedDescriptionKey: "Payment not found"]
+                    )
+                }
                 if let id = payment.id {
                     NotificationManager.shared.removeNotification(id: id)
                 }

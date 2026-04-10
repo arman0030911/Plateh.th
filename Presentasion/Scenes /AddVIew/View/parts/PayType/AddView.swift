@@ -70,8 +70,8 @@ extension AddView {
         VStack(alignment: .center, spacing: 27) {
             VStack(alignment: .leading, spacing: 25) {
                 HStack(spacing: 23) {
-                    SolidButton(text: "Her ay", solidColor: .appYelow, textColor: .appYelow, isFull: viewModel.payType == .mounthly) {
-                        viewModel.payType = .mounthly
+                    SolidButton(text: "Her ay", solidColor: .appYelow, textColor: .appYelow, isFull: viewModel.payType == .monthly) {
+                        viewModel.payType = .monthly
                     }
                     SolidButton(text: "Tek sefer", solidColor: .appYelow, textColor: .appYelow, isFull: viewModel.payType == .oneTime) {
                         viewModel.payType = .oneTime
@@ -79,7 +79,7 @@ extension AddView {
                 }
 
                 switch viewModel.payType {
-                case .mounthly:
+                case .monthly:
                     HStack(spacing: 5) {
                         Button {
                             viewModel.isShowCalendar.toggle()
@@ -113,7 +113,7 @@ extension AddView {
 
             VStack(alignment: .leading, spacing: 12) {
                 switch viewModel.payType {
-                case .mounthly:
+                case .monthly:
                     HStack(spacing: 10) {
                         FieldView(text: $viewModel.totalAmount, placeholder: "Toplam tutar",isTextPrice: true)
                         FieldView(text:$viewModel.paymanetAmount, placeholder: "Aylık ödeme", isTextPrice: true)
