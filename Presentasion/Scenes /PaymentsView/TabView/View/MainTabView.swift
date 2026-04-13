@@ -25,12 +25,16 @@ struct MainTabView: View {
                 PaymentsView(path: $path)
                     .tag(TabPages.paymentList)
                 
+                DepositView()
+                    .tag(TabPages.deposit)
             }
             //.padding(.bottom, 120 )
             
             HStack(spacing: 32){
                 Tabitem(image: "house", text:"Ana sayfa", pageType: .main , selected: $selectionPage)
                 Tabitem(image: "list.bullet.rectangle.portrait", text:"Ödemeler", pageType: .paymentList, selected: $selectionPage)
+                
+                Tabitem(image: "list.bullet.rectangle.portrait", text:"Faiz", pageType: .deposit, selected: $selectionPage)
              
                  
             }
