@@ -1,10 +1,3 @@
-//
-//  TagsView.swift
-//  Plateh.th
-//
-//  Created by Adis on 9.03.2026.
-//
-
 import SwiftUI
 struct InfoTagsView: View {
     var text: String 

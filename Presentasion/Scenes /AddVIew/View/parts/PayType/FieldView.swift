@@ -1,9 +1,3 @@
-//
-//  FieldView.swift
-//  Plateh.th
-//
-//  Created by Adis on 10.03.2026.
-//
 import SwiftUI
 
 struct FieldView: View {

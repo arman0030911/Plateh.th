@@ -1,10 +1,3 @@
-//
-//   FullButton.swift
-//  Plateh.th
-//
-//  Created by Adis on 8.03.2026.
-//
-
 import SwiftUI
 
 struct FullButton: View {

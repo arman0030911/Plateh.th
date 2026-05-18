@@ -1,10 +1,3 @@
-//
-//  MainTabView.swift
-//  Plateh.th
-//
-//  Created by Adis on 5.03.2026.
-//
-
 import SwiftUI 
  
 

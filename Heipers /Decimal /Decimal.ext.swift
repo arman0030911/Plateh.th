@@ -1,10 +1,3 @@
-//
-//  Decimal.ext.swift
-//  Plateh.th
-//
-//  Created by Adis on 19.03.2026.
-//
-
 import Foundation
 extension Double  { 
     var formattedWithoutDecimals: String { 
@@ -23,6 +16,21 @@ extension Double  {
 
     var currencyText: String {
         "₺\(formattedWithoutDecimals)"
+    }
+
+    func currencyText(symbol: String) -> String {
+        "\(symbol)\(formattedWithoutDecimals)"
+    }
+
+    var depositPercentText: String {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale(identifier: "tr_TR")
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.maximumFractionDigits = 2
+
+        let formatted = formatter.string(from: self as NSNumber) ?? "\(self)"
+        return "%\(formatted)"
     }
 }
 

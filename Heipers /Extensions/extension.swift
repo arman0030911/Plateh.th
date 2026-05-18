@@ -1,13 +1,9 @@
-//
-//  extension.swift
-//  Plateh.th
-//
-//  Created by Adis on 19.03.2026.
-//
-
 
 import Foundation
+
 extension Date {
+    // MARK: - Formatters
+
     private static let turkishMonthYearFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "tr_TR")
@@ -34,6 +30,8 @@ extension Date {
         return formatter
     }()
 
+    // MARK: - Calendar Helpers
+
     var startOfMonth: Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: self)
@@ -55,21 +53,20 @@ extension Date {
     var dayNumber: Int {
         Calendar.current.component(.day, from: self)
     }
-    
-    
-    
-        var withoutDayMonthYear: String {
-            Date.turkishMonthYearFormatter.string(from: self).capitalized(with: Locale(identifier: "tr_TR"))
-        }
-    
-    
-    func IsInSameManth(date: Date) -> Bool { 
+
+    func isInSameMonth(as date: Date) -> Bool {
         let calendar = Calendar.current
-        return calendar.component(.month, from: self) == calendar.component(.month, from: date)   && 
-        calendar.component(.year, from: self) == calendar.component(.year, from: date)
+        return calendar.component(.month, from: self) == calendar.component(.month, from: date) &&
+            calendar.component(.year, from: self) == calendar.component(.year, from: date)
     }
-    
-    var dayMonthString: String { 
+
+    // MARK: - Formatted Output
+
+    var withoutDayMonthYear: String {
+        Date.turkishMonthYearFormatter.string(from: self).capitalized(with: Locale(identifier: "tr_TR"))
+    }
+
+    var dayMonthString: String {
         Date.dayMonthFormatter.string(from: self)
     }
 
@@ -81,5 +78,4 @@ extension Date {
         guard let value, !value.isEmpty else { return nil }
         return isoFormatter.date(from: value)
     }
-    
-    }
+}

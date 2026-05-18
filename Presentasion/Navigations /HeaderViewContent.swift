@@ -1,10 +1,3 @@
-//
-//  HeaderViewContent.swift
-//  Plateh.th
-//
-//  Created by Adis on 8.03.2026.
-//
-
 import Foundation
 
 struct HeaderViewContent {

@@ -1,55 +1,52 @@
-//
-//  PaymentMapper.swift
-//  Plateh.th
-//
-//  Created by Adis on 14.03.2026.
-//
-
 
 
 import Foundation
 import CoreData
 
 struct PaymentMapper {
+    // MARK: - Formatter
+
     private static let dateFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         return formatter
     }()
-    
-    static func toDomain(from enitie: PaymentEntitly) -> Payment {
-        let id = enitie.id ?? UUID().uuidString
-        let type = PayType(rawValue: Int(enitie.type)) ?? .monthly
-        let title = enitie.title ?? ""
-        let descriptionText = enitie.descriptionText ?? ""
-        let paymentAmount = enitie.paymentAmount?.doubleValue ?? 0
-        let totalAmount = enitie.totalAmount?.doubleValue ?? 0
-        let remainingAmount = enitie.remainingAmount?.doubleValue
-        let dueDay = Int(enitie.dueDay)
-   
+
+    // MARK: - Mapping
+
+    static func toDomain(from entity: PaymentEntitly) -> Payment {
+        let id = entity.id ?? UUID().uuidString
+        let type = PayType(rawValue: Int(entity.type)) ?? .monthly
+        let title = entity.title ?? ""
+        let descriptionText = entity.descriptionText ?? ""
+        let paymentAmount = entity.paymentAmount?.doubleValue ?? 0
+        let totalAmount = entity.totalAmount?.doubleValue ?? 0
+        let remainingAmount = entity.remainingAmount?.doubleValue
+        let dueDay = Int(entity.dueDay)
+
         let dueDateString: String? = {
-             if let date = enitie.dueDate {
+            if let date = entity.dueDate {
                 return dateFormatter.string(from: date)
             }
             return nil
         }()
-        
+
         let createdAtString: String = {
-            if let createdAt = enitie.createdAt {
+            if let createdAt = entity.createdAt {
                 return dateFormatter.string(from: createdAt)
             } else {
                 return dateFormatter.string(from: Date())
             }
         }()
-        
+
         let lastPayString: String? = {
-            if let lastPay = enitie.lastPay {
+            if let lastPay = entity.lastPay {
                 return dateFormatter.string(from: lastPay)
             }
             return nil
         }()
 
         let closeDateString: String? = {
-            if let closeDate = enitie.closeDate {
+            if let closeDate = entity.closeDate {
                 return dateFormatter.string(from: closeDate)
             }
             return nil
@@ -63,57 +60,57 @@ struct PaymentMapper {
             paymentAmount: paymentAmount,
             totalAmount: totalAmount,
             dueDay: dueDay,
-            dueDate: dueDateString,  // Date → String
-            isNotificationEnabled: enitie.isNotificationEnables,
-            createdAt: createdAtString, // Date → String
-            lastPay: lastPayString,     // Date → String
+            dueDate: dueDateString,
+            isNotificationEnabled: entity.isNotificationEnables,
+            createdAt: createdAtString,
+            lastPay: lastPayString,
             storedRemainingAmount: remainingAmount,
-            isClosedStored: enitie.isClosed,
+            isClosedStored: entity.isClosed,
             closeDate: closeDateString
         )
 
         return payment
     }
 
-    static func toEntitie(from: Payment, context: NSManagedObjectContext) -> PaymentEntitly {
-        let entitie = PaymentEntitly(context: context)
-        // Fill when persisting:
-        entitie.id = from.id.isEmpty ? UUID().uuidString : from.id
-        entitie.type = Int16(from.type.rawValue)
-        entitie.title = from.title
-        entitie.descriptionText = from.description
-        entitie.paymentAmount = NSDecimalNumber(value: from.paymentAmount)
-        entitie.totalAmount = NSDecimalNumber(value: from.totalAmount)
-        entitie.remainingAmount = NSDecimalNumber(value: from.storedRemainingAmount ?? from.totalAmount)
-        entitie.dueDay = Int16(from.dueDay ?? 0)
-        
-        // String → Date: если строка не парсится, оставим nil/дефолт
-        if let dueDateStr = from.dueDate, let date = dateFormatter.date(from: dueDateStr) {
-            entitie.dueDate = date
-        } else {
-            entitie.dueDate = nil
-        }
-        
-        entitie.isNotificationEnables = from.isNotificationEnabled
-        
-        if let createdAtDate = dateFormatter.date(from: from.createdAt) {
-            entitie.createdAt = createdAtDate
-        } else {
-            entitie.createdAt = Date()
-        }
-        
-        if let lastPayStr = from.lastPay, let date = dateFormatter.date(from: lastPayStr) {
-            entitie.lastPay = date
-        } else {
-            entitie.lastPay = nil
-        }
-        entitie.isClosed = from.isClosedStored
+    static func toEntity(from payment: Payment, context: NSManagedObjectContext) -> PaymentEntitly {
+        let entity = PaymentEntitly(context: context)
 
-        if let closeDateStr = from.closeDate, let date = dateFormatter.date(from: closeDateStr) {
-            entitie.closeDate = date
+        entity.id = payment.id.isEmpty ? UUID().uuidString : payment.id
+        entity.type = Int16(payment.type.rawValue)
+        entity.title = payment.title
+        entity.descriptionText = payment.description
+        entity.paymentAmount = NSDecimalNumber(value: payment.paymentAmount)
+        entity.totalAmount = NSDecimalNumber(value: payment.totalAmount)
+        entity.remainingAmount = NSDecimalNumber(value: payment.storedRemainingAmount ?? payment.totalAmount)
+        entity.dueDay = Int16(payment.dueDay ?? 0)
+
+        if let dueDateStr = payment.dueDate, let date = dateFormatter.date(from: dueDateStr) {
+            entity.dueDate = date
         } else {
-            entitie.closeDate = nil
+            entity.dueDate = nil
         }
-        return entitie
+
+        entity.isNotificationEnables = payment.isNotificationEnabled
+
+        if let createdAtDate = dateFormatter.date(from: payment.createdAt) {
+            entity.createdAt = createdAtDate
+        } else {
+            entity.createdAt = Date()
+        }
+
+        if let lastPayStr = payment.lastPay, let date = dateFormatter.date(from: lastPayStr) {
+            entity.lastPay = date
+        } else {
+            entity.lastPay = nil
+        }
+        entity.isClosed = payment.isClosedStored
+
+        if let closeDateStr = payment.closeDate, let date = dateFormatter.date(from: closeDateStr) {
+            entity.closeDate = date
+        } else {
+            entity.closeDate = nil
+        }
+        return entity
     }
+
 }

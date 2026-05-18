@@ -1,10 +1,3 @@
-//
-//  RadioButtonView.swift
-//  Plateh.th
-//
-//  Created by Adis on 9.03.2026.
-//
-
 import SwiftUI
 
 struct RadioButtonView: View {

@@ -1,10 +1,3 @@
-//
-//  Tabitem.swift
-//  Plateh.th
-//
-//  Created by Adis on 13.03.2026.
-//
-
 import SwiftUI 
 struct Tabitem: View {
     var image: String 

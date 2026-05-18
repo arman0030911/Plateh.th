@@ -1,6 +1,5 @@
 import Foundation
 
-
 struct Payment: Identifiable, Hashable {
     let id: String
     let type: PayType
@@ -9,13 +8,15 @@ struct Payment: Identifiable, Hashable {
     var paymentAmount: Double
     var totalAmount: Double
     var dueDay: Int?
-    var dueDate: String?      // Было Date?, стало String?
+    var dueDate: String?
     var isNotificationEnabled: Bool
-    var createdAt: String     // Было Date, стало String
-    var lastPay: String?      // Было Date?, стало String?
+    var createdAt: String
+    var lastPay: String?
     var storedRemainingAmount: Double?
     var isClosedStored: Bool
     var closeDate: String?
+
+    // MARK: - Derived Dates
 
     var lastPayDate: Date? {
         Date.fromISO8601(lastPay)
@@ -24,7 +25,9 @@ struct Payment: Identifiable, Hashable {
     var closeDateValue: Date? {
         Date.fromISO8601(closeDate)
     }
-    
+
+    // MARK: - Derived State
+
     var remainingAmount: Double {
         switch type {
         case .monthly:
@@ -48,12 +51,13 @@ struct Payment: Identifiable, Hashable {
             return lastPayDate != nil || isClosed
         }
     }
-    
-    // Hashable только по id
+
+    // MARK: - Hashable
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-    
+
     static func == (lhs: Payment, rhs: Payment) -> Bool {
         lhs.id == rhs.id
     }

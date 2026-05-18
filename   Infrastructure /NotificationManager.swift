@@ -2,9 +2,13 @@ import Foundation
 import UserNotifications
 
 final class NotificationManager {
+    // MARK: - Shared Instance
+
     static let shared = NotificationManager()
 
     private init() {}
+
+    // MARK: - Public API
 
     func requestAuthorizationIfNeeded() async {
         let center = UNUserNotificationCenter.current()
@@ -15,7 +19,7 @@ final class NotificationManager {
         do {
             _ = try await center.requestAuthorization(options: [.alert, .sound, .badge])
         } catch {
-            print(error.localizedDescription)
+            AppLogger.error(error, context: "Notification authorization")
         }
     }
 
@@ -29,8 +33,8 @@ final class NotificationManager {
         let content = UNMutableNotificationContent()
         content.title = payment.title
         content.body = payment.type == .monthly
-            ? "Bugun odeme gunu."
-            : "Odeme tarihi yaklasti."
+            ? "Bugün ödeme günü."
+            : "Ödeme tarihi yaklaştı."
         content.sound = .default
 
         guard let trigger = notificationTrigger(for: payment) else {
@@ -46,7 +50,7 @@ final class NotificationManager {
         center.removePendingNotificationRequests(withIdentifiers: [payment.id])
         center.add(request) { error in
             if let error {
-                print(error.localizedDescription)
+                AppLogger.error(error, context: "Notification scheduling")
             }
         }
     }
@@ -56,6 +60,8 @@ final class NotificationManager {
         center.removePendingNotificationRequests(withIdentifiers: [id])
         center.removeDeliveredNotifications(withIdentifiers: [id])
     }
+
+    // MARK: - Helpers
 
     private func notificationTrigger(for payment: Payment) -> UNNotificationTrigger? {
         let calendar = Calendar.current

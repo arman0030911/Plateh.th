@@ -1,10 +1,3 @@
-//
-//  MainHeaderView.swift
-//  Plateh.th
-//
-//  Created by Adis on 5.03.2026.
-//
-
 import SwiftUI
 
 struct HeaderView: View {
@@ -23,7 +16,7 @@ struct HeaderView: View {
                         .foregroundStyle(.appGray)
                     Spacer()
 
-                    if page.pageType == .main {
+                    if (page.pageType == .main || page.pageType == .deposit), action != nil {
                         Button {
                             action?()
                         } label: {

@@ -1,10 +1,3 @@
-//
-//  SetPaymentRepositoryIMPL.swift
-//  Plateh.th
-//
-//  Created by Adis on 23.03.2026.
-//
-
 import Foundation
 
 class SetPaymentRepositoryImpl: SetPaymentRepository {

@@ -1,15 +1,10 @@
-//
-//  PaymentsView.swift
-//  Plateh.th
-//
-//  Created by Adis on 8.03.2026.
-//
-
 import SwiftUI
 
 struct PaymentsView: View {
     @Binding var path: NavigationPath
     @StateObject var viewModel = Assembly.createPaymentsViewModel()
+
+    // MARK: - Body
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -28,8 +23,8 @@ struct PaymentsView: View {
                 VStack(alignment: .leading, spacing: 19) {
                     if viewModel.payments.isEmpty {
                         EmptyPaymentsView(
-                            title: "Odeme bulunamadi",
-                            subtitle: "Secilen tarih araliginda kayitli bir odeme yok."
+                            title: "Ödeme bulunamadı",
+                            subtitle: "Seçilen tarih aralığında kayıtlı bir ödeme yok."
                         )
                     } else {
                         ForEach(viewModel.payments, id: \.id) { payment in

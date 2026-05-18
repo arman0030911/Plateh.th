@@ -1,10 +1,3 @@
-//
-//  PaymentMapperTests.swift
-//  Plateh.thTests
-//
-//  Created by Adis on 25.03.2026.
-//
-
 
 
 import Foundation
@@ -112,7 +105,7 @@ final class PaymentMapperTests: XCTestCase {
         )
         
         // When
-        let entity = PaymentMapper.toEntitie(from: payment, context: context)
+        let entity = PaymentMapper.toEntity(from: payment, context: context)
         
         // Then
         XCTAssertEqual(entity.id, "test-789")
@@ -147,7 +140,7 @@ final class PaymentMapperTests: XCTestCase {
         )
         
         // When
-        let entity = PaymentMapper.toEntitie(from: invalidPayment, context: context)
+        let entity = PaymentMapper.toEntity(from: invalidPayment, context: context)
         
         // Then
         // При невалидной строке должен быть nil (или current date для createdAt)

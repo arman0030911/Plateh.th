@@ -1,21 +1,25 @@
 
-
 import SwiftUI 
 import Combine
 
 struct DetailsView: View {
+    // MARK: - State
+
     @State var isNotificationSelected: Bool = false
     @State private var isShowDeleteAlert = false
     @StateObject private var viewModel: DetailsViewModel
-    var paymentId: String  // Изменено: было payment: Payment
+    var paymentId: String
     @Binding var path: NavigationPath
-    
-    // Новый init для работы с id
+
+    // MARK: - Init
+
     init(paymentId: String, path: Binding<NavigationPath>) {
         self.paymentId = paymentId
         self._path = path
         self._viewModel = StateObject(wrappedValue: Assembly.createDetailsViewModel())
     }
+
+    // MARK: - Helpers
 
     private func accentColor(for payment: Payment) -> Color {
         PaymentStatus(payment: payment).accentColor
@@ -31,7 +35,9 @@ struct DetailsView: View {
     private func shouldShowRemainingAmount(for payment: Payment) -> Bool {
         payment.type == .monthly && payment.totalAmount > payment.paymentAmount
     }
-    
+
+    // MARK: - Body
+
     var body: some View {
         Group {
             if let payment = viewModel.payment {
@@ -158,6 +164,8 @@ struct DetailsView: View {
 }
 
 extension DetailsView{
+    // MARK: - Header
+
     var header: some View{
         HStack{ 
             Button { 
@@ -192,8 +200,8 @@ extension DetailsView{
                 
             }
             .buttonStyle(.plain)
-            .alert("Odemeyi sil?", isPresented: $isShowDeleteAlert) {
-                Button("Iptal", role: .cancel) { }
+            .alert("Ödemeyi sil?", isPresented: $isShowDeleteAlert) {
+                Button("İptal", role: .cancel) { }
                 Button("Sil", role: .destructive) {
                     viewModel.deletePayment(id: paymentId)
                     if !path.isEmpty {
@@ -201,33 +209,36 @@ extension DetailsView{
                     }
                 }
             } message: {
-                Text("Bu odeme tamamen silinecek.")
+                Text("Bu ödeme tamamen silinecek.")
             }
-            
-
-
         }
     }
 }
 
 @MainActor
 class DetailsViewModel: ObservableObject {
+    // MARK: - State
+
     @Published var payment: Payment?
     private let fetchUseCase: FetchPaymentsUseCase
     private let updateUseCase: UpdatePaymentUseCase
     private let deleteUseCase: DeletePaymentUseCase
-    
+
+    // MARK: - Init
+
     init(fetchUseCase: FetchPaymentsUseCase, updateUseCase: UpdatePaymentUseCase, deleteUseCase: DeletePaymentUseCase) {
         self.fetchUseCase = fetchUseCase
         self.updateUseCase = updateUseCase
         self.deleteUseCase = deleteUseCase
     }
-    
+
+    // MARK: - Actions
+
     func loadPayment(id: String) {
         fetchUseCase.execute(from: nil, includeClosed: true) { [weak self] result in
             guard let self = self else { return }
             if case .success(let payments) = result {
-                DispatchQueue.main.async {
+                Task { @MainActor in
                     self.payment = payments.first { $0.id == id }
                 }
             }
@@ -239,7 +250,7 @@ class DetailsViewModel: ObservableObject {
             try updateUseCase.closePayment(id: id)
             loadPayment(id: id)
         } catch {
-            print(error.localizedDescription)
+            AppLogger.error(error, context: "Closing payment")
         }
     }
 
@@ -248,7 +259,7 @@ class DetailsViewModel: ObservableObject {
             try updateUseCase.deleteLastPayment(id: id)
             loadPayment(id: id)
         } catch {
-            print(error.localizedDescription)
+            AppLogger.error(error, context: "Deleting last payment")
         }
     }
 
@@ -257,7 +268,7 @@ class DetailsViewModel: ObservableObject {
             try updateUseCase.updateNotification(id: id, isEnabled: isEnabled)
             loadPayment(id: id)
         } catch {
-            print(error.localizedDescription)
+            AppLogger.error(error, context: "Updating payment notification")
         }
     }
 
@@ -265,7 +276,7 @@ class DetailsViewModel: ObservableObject {
         do {
             try deleteUseCase.execute(id: id)
         } catch {
-            print(error.localizedDescription)
+            AppLogger.error(error, context: "Deleting payment")
         }
     }
 }

@@ -1,10 +1,14 @@
 import SwiftUI
 
 struct ContentView: View {
+    // MARK: - State
+
     @State var isShowAddView: Bool = false 
     @State var payType: PayType = .monthly
     @StateObject var viewModel = Assembly.createMainViewModel()
     @Binding var path: NavigationPath
+
+    // MARK: - Derived Values
 
     private var totalDebtText: String {
         viewModel.totalDebt.currencyText
@@ -13,6 +17,8 @@ struct ContentView: View {
     private var currentDateText: String {
         Date.now.shortTurkishDisplay
     }
+
+    // MARK: - Body
 
     var body: some View {
         ZStack(alignment: .top){ 
@@ -59,16 +65,18 @@ struct ContentView: View {
 }
 
 extension ContentView {
+    // MARK: - Helpers
+
     @ViewBuilder
     func paymentsList(for type: PayType) -> some View {
         let filteredPayments = viewModel.payments.filter { $0.type == type }
 
         if filteredPayments.isEmpty {
             EmptyPaymentsView(
-                title: type == .monthly ? "Aylik odeme yok" : "Tek seferlik odeme yok",
+                title: type == .monthly ? "Aylık ödeme yok" : "Tek seferlik ödeme yok",
                 subtitle: type == .monthly
-                    ? "Yeni bir kart ekleyip duzenli odemelerini buradan takip edebilirsin."
-                    : "Tek seferlik odemeler burada gorunecek."
+                    ? "Yeni bir kart ekleyip düzenli ödemelerini buradan takip edebilirsin."
+                    : "Tek seferlik ödemeler burada görünecek."
             )
         } else {
             ForEach(filteredPayments, id: \.id) { item in

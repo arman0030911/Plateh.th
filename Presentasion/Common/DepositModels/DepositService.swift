@@ -1,25 +1,17 @@
-//
-//  DepositService.swift
-//  Plateh.th
-//
-//  Created by Adis on 13.04.2026.
-//
-
 import Foundation
 
 actor DepositService {
-    // Для симулятора (сервер на том же Mac)
+    // Локальный API, который отдаёт банковские ставки для вкладов.
     private let baseURL = "http://localhost:8080/api"
-    
-    // Для реального устройства – замени IP на адрес твоего Mac в локальной сети
-    // private let baseURL = "http://192.168.1.42:8080/api"
-    
+
+    // MARK: - Networking
+
     private let decoder: JSONDecoder = {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         return decoder
     }()
-    
+
     func fetchRates(currency: String, term: Int) async throws -> [DepositRate] {
         var components = URLComponents(string: "\(baseURL)/rates")
         components?.queryItems = [

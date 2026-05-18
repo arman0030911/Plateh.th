@@ -1,15 +1,12 @@
-//
-//  PersistentContainer.swift
-//  Plateh.th
-//
-//  Created by Adis on 16.03.2026.
-//
-
 import Foundation
 import CoreData 
+
 class PersistentContainer {
     static let shared = PersistentContainer()
+
     private init() {}
+
+    // MARK: - Helpers
 
     private func configure(_ container: NSPersistentContainer) -> NSPersistentContainer {
         container.viewContext.automaticallyMergesChangesFromParent = true
@@ -31,6 +28,7 @@ class PersistentContainer {
         }
 
         if let loadError {
+            AppLogger.error(loadError, context: "Core Data store loading")
             assertionFailure("Unresolved error \(loadError), \(loadError.userInfo)")
 
             let fallbackContainer = NSPersistentContainer(name: "db")
@@ -39,6 +37,7 @@ class PersistentContainer {
             fallbackContainer.persistentStoreDescriptions = [fallbackDescription]
             fallbackContainer.loadPersistentStores { _, error in
                 if let error = error as NSError? {
+                    AppLogger.error(error, context: "Fallback Core Data store loading")
                     assertionFailure("Fallback store error \(error), \(error.userInfo)")
                 }
             }

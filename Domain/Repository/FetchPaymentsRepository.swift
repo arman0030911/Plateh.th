@@ -1,10 +1,3 @@
-//
-//  FetchPaymentsRepository.swift
-//  Plateh.th
-//
-//  Created by Adis on 16.03.2026.
-//
-
 import Foundation
 
 protocol FetchPaymentsRepository: AnyObject {

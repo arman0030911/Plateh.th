@@ -5,6 +5,8 @@ struct AddView: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject var viewModel: AddViewModel = Assembly.createAddViewModel()
 
+    // MARK: - Body
+
     var body: some View {
         ZStack {
             VStack(alignment: .center, spacing: 27) {
@@ -16,7 +18,7 @@ struct AddView: View {
                     addViewContent
                 } else {
                     Spacer()
-                    addSucsess
+                    successView
                     Spacer()
                 }
 
@@ -34,7 +36,6 @@ struct AddView: View {
                     }
 
                 VStack(spacing: 12) {
-                    // Графический календарь, прозрачный контейнер, маленький размер
                     DatePicker("", selection: $viewModel.date, displayedComponents: .date)
                         .datePickerStyle(.wheel)
                         .labelsHidden()
@@ -62,10 +63,9 @@ struct AddView: View {
         }
     }
 }
-
-
-
 extension AddView {
+    // MARK: - Content
+
     var addViewContent: some View {
         VStack(alignment: .center, spacing: 27) {
             VStack(alignment: .leading, spacing: 25) {
@@ -155,7 +155,7 @@ extension AddView {
 }
 
 extension AddView {
-    var addSucsess: some View {
+    var successView: some View {
         VStack(spacing: 55) {
             Image(systemName: "checkmark.circle")
                 .resizable()

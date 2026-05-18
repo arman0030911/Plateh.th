@@ -1,10 +1,3 @@
-//
-//  PeymentCards.swift
-//  Plateh.th
-//
-//  Created by Adis on 6.03.2026.
-//
-
 import SwiftUI 
 
 

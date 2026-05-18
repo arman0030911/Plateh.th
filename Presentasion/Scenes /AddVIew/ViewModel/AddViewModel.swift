@@ -1,26 +1,24 @@
-//
-//  AddViewModel.swift
-//  Plateh.th
-//
-//  Created by Adis on 14.03.2026.
-//
-
 import SwiftUI
 import CoreData
 import Combine
 
 class AddViewModel: ObservableObject {
+    // MARK: - Dependencies
+
     private let createUseCase: CreatePaymentUseCase
 
     init(createUseCase: CreatePaymentUseCase) {
         self.createUseCase = createUseCase
     }
 
-    // Formatter used to serialize dates to strings
+    // MARK: - Formatting
+
     private let isoFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         return formatter
     }()
+
+    // MARK: - State
 
     @Published var isNotificationSelected: Bool = false
     @Published var payType: PayType = .monthly
@@ -35,6 +33,8 @@ class AddViewModel: ObservableObject {
     @Published var totalAmount: String = ""
     @Published var date: Date = .now
 
+    // MARK: - Validation
+
     var canCreatePayment: Bool {
         validationError == nil
     }
@@ -45,25 +45,27 @@ class AddViewModel: ObservableObject {
         let monthly = paymanetAmount.parsedAmountValue
 
         if name.isEmpty {
-            return "Odeme adi zorunlu."
+            return "Ödeme adı zorunludur."
         }
 
         if total <= 0 {
-            return "Toplam tutar 0'dan buyuk olmali."
+            return "Toplam tutar 0'dan büyük olmalıdır."
         }
 
         if payType == .monthly {
             if monthly <= 0 {
-                return "Aylik odeme girmen gerekiyor."
+                return "Aylık ödeme girmeniz gerekir."
             }
 
             if monthly > total {
-                return "Aylik odeme toplam tutardan buyuk olamaz."
+                return "Aylık ödeme toplam tutardan büyük olamaz."
             }
         }
 
         return nil
     }
+
+    // MARK: - Actions
 
     func createNewPayment() {
         validationMessage = validationError
@@ -100,8 +102,8 @@ class AddViewModel: ObservableObject {
             try createUseCase.execute(payment: payment)
             isAdded.toggle()
         } catch {
-            validationMessage = "Odeme eklenemedi. Lutfen tekrar dene."
-            print(error.localizedDescription)
+            validationMessage = "Ödeme eklenemedi. Lütfen tekrar deneyin."
+            AppLogger.error(error, context: "Payment creation")
         }
     }
 }
