@@ -1,7 +1,7 @@
 import Foundation
 
 protocol FetchPaymentsUseCase: AnyObject {
-    func execute(from date: Date?, includeClosed: Bool, completion: @escaping (Result<[Payment], Error>) -> Void)
+    func execute(from date: Date?, includeClosed: Bool) async throws -> [Payment]
 }
 
 class FetchPaymentsUseCaseImpl: FetchPaymentsUseCase {
@@ -11,7 +11,7 @@ class FetchPaymentsUseCaseImpl: FetchPaymentsUseCase {
         self.repository = repository
     }
 
-    func execute(from date: Date?, includeClosed: Bool, completion: @escaping (Result<[Payment], Error>) -> Void) {
-        repository.fetchPayments(from: date, includeClosed: includeClosed, completion: completion)
+    func execute(from date: Date?, includeClosed: Bool) async throws -> [Payment] {
+        try await repository.fetchPayments(from: date, includeClosed: includeClosed)
     }
 }

@@ -1,4 +1,3 @@
-
 import Foundation
 
 class FetchPaymentsRepositoryImpl: FetchPaymentsRepository {
@@ -8,9 +7,7 @@ class FetchPaymentsRepositoryImpl: FetchPaymentsRepository {
         self.dataSource = dataSource
     }
 
-   ///
-    
-    func fetchPayments(from date: Date?, includeClosed: Bool, completion: @escaping (Result<[Payment], Error>) -> Void) {
-        dataSource.fetchPayments(date: date, includeClosed: includeClosed, completion: completion)
+    func fetchPayments(from date: Date?, includeClosed: Bool) async throws -> [Payment] {
+        try await dataSource.fetchPayments(date: date, includeClosed: includeClosed)
     }
 }

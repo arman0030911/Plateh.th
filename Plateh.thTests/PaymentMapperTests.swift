@@ -42,7 +42,7 @@ final class PaymentMapperTests: XCTestCase {
         entity.type = 0 // monthly
         entity.paymentAmount = 100
         entity.totalAmount = 1000
-        entity.isNotificationEnables = true
+        entity.isNotificationEnabled = true
         
         let testDate = Date(timeIntervalSince1970: 1609459200) // 1 Jan 2021
         entity.createdAt = testDate
