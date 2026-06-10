@@ -51,7 +51,13 @@ struct DepositFilterBarView: View {
                 }
             }
         }
-        .padding(.vertical, 8)
+        .padding(14)
+        .background(AppTheme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
+        .overlay {
+            RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                .stroke(AppTheme.border, lineWidth: 1)
+        }
     }
 }
 
@@ -66,10 +72,10 @@ private extension DepositFilterBarView {
                 .padding(.vertical, 11)
                 .frame(maxWidth: .infinity)
                 .background(isSelected ? Color.appYelow : Color.clear)
-                .clipShape(Capsule())
+                .clipShape(RoundedRectangle(cornerRadius: AppTheme.controlRadius))
                 .overlay {
-                    Capsule()
-                        .stroke(.appYelow, lineWidth: 1)
+                    RoundedRectangle(cornerRadius: AppTheme.controlRadius)
+                        .stroke(.appYelow.opacity(isSelected ? 0 : 0.55), lineWidth: 1)
                 }
         }
         .buttonStyle(.plain)

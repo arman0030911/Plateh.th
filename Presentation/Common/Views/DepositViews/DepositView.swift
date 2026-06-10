@@ -105,7 +105,7 @@ struct DepositView: View {
         let term = selectedTerm.days
 
         do {
-            rates = try await DepositService().fetchRates(currency: currency, term: term)
+            rates = try await DepositService.shared.fetchRates(currency: currency, term: term)
         } catch {
             errorMessage = "Sunucuya ulaşılamadı veya veri okunamadı."
             rates = []

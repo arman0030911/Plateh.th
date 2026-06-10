@@ -43,19 +43,15 @@ struct DetailsView: View {
                 VStack(alignment:.leading, spacing: 22){
                     header
                     
-                    VStack(alignment:.leading){
-                        VStack(alignment:.leading, spacing: 2){
-                            Text(payment.totalAmount.currencyText)
-                                .font(.appDisplay(28))
-                                .foregroundStyle(.white)
-                            Text(payment.title)
-                                .font(.appTitle(18))
-                                .foregroundStyle(accentColor(for: payment))
-                            
-                        }
-                        .padding(.vertical, 18)
-                        
+                    VStack(alignment:.leading, spacing: 6){
+                        Text(payment.totalAmount.currencyText)
+                            .font(.appDisplay(30))
+                            .foregroundStyle(.white)
+                        Text(payment.title)
+                            .font(.appTitle(18))
+                            .foregroundStyle(accentColor(for: payment))
                     }
+                    .padding(.vertical, 16)
                    .navigationBarBackButtonHidden(true)
                     VStack(alignment:.leading, spacing: 26){
                         
@@ -73,12 +69,12 @@ struct DetailsView: View {
                         }
                         Text(infoText(for: payment))
                             .font(.appBody(14))
-                            .foregroundStyle(.appMint)
+                            .foregroundStyle(AppTheme.mutedText)
                     }
                         
                     VStack(alignment: .leading, spacing: 20){
                             Divider()
-                                .background(.appGray)
+                                .background(AppTheme.border)
                         
                         
                         HStack(spacing: 5){
@@ -97,12 +93,12 @@ struct DetailsView: View {
                             .padding(.horizontal, 10)
                             .padding(.vertical, 6)
                             .background(status.accentColor)
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: AppTheme.smallRadius))
                         }
                         .padding(.horizontal, 10)
                         
                         Divider()
-                            .background(.appGray)
+                            .background(AppTheme.border)
                         
                         HStack{
                             Text("Ödeme bildirimi")
@@ -115,6 +111,13 @@ struct DetailsView: View {
                         .padding(.horizontal, 10)
                     
                         
+                        }
+                        .padding(14)
+                        .background(AppTheme.surface)
+                        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                                .stroke(AppTheme.border, lineWidth: 1)
                         }
                         
                     }
@@ -148,11 +151,20 @@ struct DetailsView: View {
                 .onAppear {
                     isNotificationSelected = payment.isNotificationEnabled
                 }
-                .onChange(of: isNotificationSelected) { _, newValue in
+                .onChange(of: isNotificationSelected) { newValue in
                     viewModel.updateNotification(id: payment.id, isEnabled: newValue)
+                }
+                .alert("Hata", isPresented: .init(
+                    get: { viewModel.errorMessage != nil },
+                    set: { if !$0 { viewModel.errorMessage = nil } }
+                )) {
+                    Button("Tamam", role: .cancel) { }
+                } message: {
+                    Text(viewModel.errorMessage ?? "")
                 }
             } else {
                 ProgressView()
+                    .tint(.appYelow)
             }
         }
         .task(id: paymentId) { @MainActor in
@@ -201,9 +213,10 @@ extension DetailsView{
             .alert("Ödemeyi sil?", isPresented: $isShowDeleteAlert) {
                 Button("İptal", role: .cancel) { }
                 Button("Sil", role: .destructive) {
-                    viewModel.deletePayment(id: paymentId)
-                    if !path.isEmpty {
-                        path.removeLast()
+                    if viewModel.deletePayment(id: paymentId) {
+                        if !path.isEmpty {
+                            path.removeLast()
+                        }
                     }
                 }
             } message: {
@@ -212,4 +225,3 @@ extension DetailsView{
         }
     }
 }
-

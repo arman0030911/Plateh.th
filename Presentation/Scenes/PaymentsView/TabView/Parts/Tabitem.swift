@@ -8,24 +8,18 @@ struct Tabitem: View {
         Button { 
             selected = pageType
         } label: { 
-            VStack(spacing: 6){
+            HStack(spacing: 7){
                Image(systemName: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 16, height: 16)
+                    .font(.system(size: 14, weight: .semibold))
                 Text(text)
                     .font(.appCaption(12))
             }
             .foregroundStyle(pageType == selected ? .appBlack : .appYelow)
-            .padding(.vertical, 8)
-            .padding(.horizontal,17)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 11)
             .background(pageType == selected ? .appYelow: .clear)
-            .clipShape(RoundedRectangle(cornerRadius: 35))
-            
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .buttonStyle(.plain)
-
-     
     }
 }
-

@@ -9,7 +9,7 @@ class SetPaymentManager: SetPaymentDataSource {
 
     private let calendar = Calendar.current
 
-    private func markClosed(_ payment: PaymentEntitly) {
+    private func markClosed(_ payment: PaymentEntity) {
         payment.remainingAmount = .zero
         payment.isClosed = true
         payment.closeDate = .now
@@ -21,7 +21,7 @@ class SetPaymentManager: SetPaymentDataSource {
         var updatedPayment: Payment?
 
         context.performAndWait {
-            let request = PaymentEntitly.fetchRequest() 
+            let request = PaymentEntity.fetchRequest() 
             request.predicate = NSPredicate(format: "id == %@", payment.id)
 
             do {

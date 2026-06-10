@@ -19,23 +19,23 @@ struct FieldView: View {
         VStack(alignment: .leading, spacing: 16){ 
             Text(placeholder)
                 .font(.appBody(13))
-                .foregroundStyle(.appMint)
+                .foregroundStyle(AppTheme.mutedText)
             if isTextField { 
-                TextField("", text: $text, prompt: Text(placeholder).foregroundStyle(.appBlack.opacity(0.45)))
+                TextField("", text: $text, prompt: Text(placeholder).foregroundColor(.appBlack.opacity(0.42)))
                     .font(.appBody(15))
                     .frame(height: 50)
                     .padding(.horizontal, 14)
-                    .background(.white.opacity(0.95))
-                    .clipShape(Capsule())
+                    .background(AppTheme.fieldSurface)
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.controlRadius))
                     .keyboardType(isTextPrice ? .numberPad : .default)
                     .overlay { 
-                        Capsule()
-                            .stroke(.appMint.opacity(0.25), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: AppTheme.controlRadius)
+                            .stroke(.appMint.opacity(0.28), lineWidth: 1)
                     }
                     .onAppear {
                         formatPriceInput(text)
                     }
-                    .onChange(of: text) { _, newValue in
+                    .onChange(of: text) { newValue in
                         formatPriceInput(newValue)
                     }
             } else { 
@@ -45,13 +45,12 @@ struct FieldView: View {
                     .padding(.horizontal, 10)
                     .padding(.vertical, 8)
                     .scrollContentBackground(.hidden)
-                    .background(.white.opacity(0.95))
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .background(AppTheme.fieldSurface)
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
                     .overlay { 
-                        RoundedRectangle(cornerRadius: 20)
-                            .stroke(.appMint.opacity(0.25), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                            .stroke(.appMint.opacity(0.28), lineWidth: 1)
                     }
-                
             }
         }
     }

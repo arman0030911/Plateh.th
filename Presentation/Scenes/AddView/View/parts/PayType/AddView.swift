@@ -23,7 +23,7 @@ struct AddView: View {
                 }
 
             }
-            .padding(.horizontal, 18)
+            .padding(.horizontal, AppTheme.screenPadding)
             .padding(.vertical, 24)
             .frame(maxWidth: .infinity)
             .background(.appBlack)
@@ -42,18 +42,18 @@ struct AddView: View {
                         .padding(8)
                         .background(Color.clear)
                         .scaleEffect(0.85)
-                        .onChange(of: viewModel.date) { _, _ in
+                        .onChange(of: viewModel.date) { _ in
                             viewModel.isShowCalendar = false
                         }
 
                 }
                 .padding(16)
                 .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
                 .padding(.horizontal, 24)
             }
         }
-        .onChange(of: viewModel.isAdded) { _, isAdded in
+        .onChange(of: viewModel.isAdded) { isAdded in
             guard isAdded else { return }
 
             Task { @MainActor in
@@ -125,11 +125,18 @@ extension AddView {
                 FieldView(text:$viewModel.paymentName, placeholder: "Ödeme adı")
                 FieldView(text: $viewModel.description, placeholder: "Açıklama", isTextField: false)
             }
+            .padding(14)
+            .background(AppTheme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                    .stroke(AppTheme.border, lineWidth: 1)
+            }
 
             HStack {
                 Text("Ödeme bildirimi")
                     .font(.appBody(14))
-                    .foregroundStyle(.appYelow)
+                    .foregroundStyle(AppTheme.mutedText)
                     .offset(y: -4)
                 Spacer()
                 RadioButtonView(isSelected: $viewModel.isNotificationSelected)
@@ -145,7 +152,7 @@ extension AddView {
             }
 
             Spacer()
-            FullButton(text: "Ekle", filltcolor: .black, textcolor: .appYelow) {
+            FullButton(text: "Ekle", fillColor: .black, textcolor: .appYelow) {
                 viewModel.createNewPayment()
             }
             .disabled(!viewModel.canCreatePayment)
@@ -160,7 +167,7 @@ extension AddView {
             Image(systemName: "checkmark.circle")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 127, height: 127)
+                .frame(width: 104, height: 104)
                 .foregroundStyle(.appYelow)
             Text("Ödeme eklendi")
                 .font(.appTitle(22))

@@ -35,7 +35,7 @@ extension Date {
     var startOfMonth: Date {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: self)
-        return calendar.date(from: components)!
+        return calendar.date(from: components) ?? self
     }
     
     var endOfMonth: Date {
@@ -43,7 +43,7 @@ extension Date {
         var components = DateComponents()
         components.month = 1
         components.second = -1
-        return calendar.date(byAdding: components, to: self.startOfMonth)!
+        return calendar.date(byAdding: components, to: self.startOfMonth) ?? self
     }
 
     var previousMonth: Date {

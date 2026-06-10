@@ -13,7 +13,7 @@ struct PaymentMapper {
 
     // MARK: - Mapping
 
-    static func toDomain(from entity: PaymentEntitly) -> Payment {
+    static func toDomain(from entity: PaymentEntity) -> Payment {
         let id = entity.id ?? UUID().uuidString
         let type = PayType(rawValue: Int(entity.type)) ?? .monthly
         let title = entity.title ?? ""
@@ -72,8 +72,8 @@ struct PaymentMapper {
         return payment
     }
 
-    static func toEntity(from payment: Payment, context: NSManagedObjectContext) -> PaymentEntitly {
-        let entity = PaymentEntitly(context: context)
+    static func toEntity(from payment: Payment, context: NSManagedObjectContext) -> PaymentEntity {
+        let entity = PaymentEntity(context: context)
 
         entity.id = payment.id.isEmpty ? UUID().uuidString : payment.id
         entity.type = Int16(payment.type.rawValue)

@@ -20,7 +20,7 @@ struct DepositStateView: View {
 
             Text(subtitle)
                 .font(.appBody(14))
-                .foregroundStyle(.appMint.opacity(0.82))
+                .foregroundStyle(AppTheme.mutedText)
                 .multilineTextAlignment(.center)
 
             if let actionTitle, let action {
@@ -30,18 +30,18 @@ struct DepositStateView: View {
                     .padding(.horizontal, 18)
                     .padding(.vertical, 10)
                     .background(.appYelow)
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.controlRadius))
                     .buttonStyle(.plain)
             }
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 28)
         .padding(.horizontal, 18)
-        .background(.white.opacity(0.03))
-        .clipShape(RoundedRectangle(cornerRadius: 22))
+        .background(AppTheme.surface)
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
         .overlay {
-            RoundedRectangle(cornerRadius: 22)
-                .stroke(.appMint.opacity(0.16), lineWidth: 1)
+            RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                .stroke(AppTheme.border, lineWidth: 1)
         }
         .padding(.top, 18)
     }

@@ -38,7 +38,7 @@ struct AddDepositCalculationView: View {
                     Spacer()
                 }
             }
-            .padding(.horizontal, 18)
+            .padding(.horizontal, AppTheme.screenPadding)
             .padding(.vertical, 24)
             .frame(maxWidth: .infinity)
             .background(.appBlack)
@@ -82,12 +82,19 @@ private extension AddDepositCalculationView {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 14)
                 .padding(.vertical, 14)
-                .background(.white.opacity(0.03))
-                .clipShape(RoundedRectangle(cornerRadius: 20))
+                .background(AppTheme.elevatedSurface)
+                .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 20)
-                        .stroke(.appMint.opacity(0.16), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                        .stroke(AppTheme.border, lineWidth: 1)
                 }
+            }
+            .padding(14)
+            .background(AppTheme.surface)
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                    .stroke(AppTheme.border, lineWidth: 1)
             }
 
             if !canConfirm {
@@ -100,7 +107,7 @@ private extension AddDepositCalculationView {
 
             Spacer()
 
-            FullButton(text: "Onayla", filltcolor: .black, textcolor: .appYelow) {
+            FullButton(text: "Onayla", fillColor: .black, textcolor: .appYelow) {
                 confirm()
             }
             .disabled(!canConfirm)
@@ -113,7 +120,7 @@ private extension AddDepositCalculationView {
             Image(systemName: "chart.line.uptrend.xyaxis.circle")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 127, height: 127)
+                .frame(width: 104, height: 104)
                 .foregroundStyle(.appYelow)
             Text("Hesaplama güncellendi")
                 .font(.appTitle(22))

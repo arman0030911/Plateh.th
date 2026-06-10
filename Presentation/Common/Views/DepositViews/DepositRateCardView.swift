@@ -37,6 +37,10 @@ struct DepositRateCardView: View {
             HStack(alignment: .top, spacing: 16) {
                 VStack(alignment: .leading, spacing: 10) {
                     VStack(alignment: .leading, spacing: 4) {
+                        Text("Banka teklifi")
+                            .font(.appCaption(11))
+                            .foregroundStyle(.appBlack.opacity(0.58))
+                            .textCase(.uppercase)
                         Text(rate.bank.name)
                             .font(.appTitle(24))
                             .foregroundStyle(.appBlack)
@@ -54,7 +58,7 @@ struct DepositRateCardView: View {
                             .padding(.horizontal, 11)
                             .padding(.vertical, 7)
                             .background(.appBlack.opacity(0.92))
-                            .clipShape(Capsule())
+                            .clipShape(RoundedRectangle(cornerRadius: AppTheme.smallRadius))
                     }
                 }
 
@@ -77,7 +81,7 @@ struct DepositRateCardView: View {
                     .padding(.horizontal, 11)
                     .padding(.vertical, 7)
                     .background(.appBlack.opacity(0.92))
-                    .clipShape(Capsule())
+                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.smallRadius))
             }
 
             RoundedRectangle(cornerRadius: 18)
@@ -118,11 +122,12 @@ struct DepositRateCardView: View {
                 endPoint: .bottomTrailing
             )
         )
-        .clipShape(RoundedRectangle(cornerRadius: 25))
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
         .overlay {
-            RoundedRectangle(cornerRadius: 25)
+            RoundedRectangle(cornerRadius: AppTheme.cardRadius)
                 .stroke(.white.opacity(0.14), lineWidth: 1)
         }
+        .shadow(color: .appMint.opacity(0.12), radius: 16, y: 8)
     }
 }
 
@@ -141,6 +146,6 @@ private extension DepositRateCardView {
         .padding(.horizontal, 14)
         .padding(.vertical, 12)
         .background(.white.opacity(0.4))
-        .clipShape(RoundedRectangle(cornerRadius: 18))
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.controlRadius))
     }
 }

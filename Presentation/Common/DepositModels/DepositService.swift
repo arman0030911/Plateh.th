@@ -1,6 +1,7 @@
 import Foundation
 
 actor DepositService {
+    static let shared = DepositService()
     private let baseURL = AppConfig.depositAPIBaseURL
 
     // MARK: - Networking

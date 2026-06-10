@@ -36,7 +36,7 @@ final class PaymentMapperTests: XCTestCase {
     
     func testToDomainConvertsDateToString() {
         // Given (Дано)
-        let entity = PaymentEntitly(context: context)
+        let entity = PaymentEntity(context: context)
         entity.id = "test-123"
         entity.title = "Test Payment"
         entity.type = 0 // monthly
@@ -65,7 +65,7 @@ final class PaymentMapperTests: XCTestCase {
     
     func testToDomainHandlesNilDates() {
         // Given
-        let entity = PaymentEntitly(context: context)
+        let entity = PaymentEntity(context: context)
         entity.id = "test-456"
         entity.title = "No Date Payment"
         entity.createdAt = nil // Nil date

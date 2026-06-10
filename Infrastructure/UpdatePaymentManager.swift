@@ -45,11 +45,11 @@ class UpdatePaymentManager: UpdatePaymentDataSource {
         }
     }
 
-    private func update(id: String, change: @escaping (PaymentEntitly) -> Void) throws {
+    private func update(id: String, change: @escaping (PaymentEntity) -> Void) throws {
         var thrownError: Error?
 
         context.performAndWait {
-            let request = PaymentEntitly.fetchRequest()
+            let request = PaymentEntity.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", id)
 
             do {

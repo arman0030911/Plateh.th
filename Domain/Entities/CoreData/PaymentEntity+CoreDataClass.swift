@@ -1,19 +1,19 @@
 import Foundation
 import CoreData
 
-public typealias PaymentEntitlyCoreDataClassSet = NSSet
+public typealias PaymentEntityCoreDataClassSet = NSSet
 
-@objc(PaymentEntitly)
-public class PaymentEntitly: NSManagedObject {
+@objc(PaymentEntity)
+public class PaymentEntity: NSManagedObject {
 
 }
 
-public typealias PaymentEntitlyCoreDataPropertiesSet = NSSet
+public typealias PaymentEntityCoreDataPropertiesSet = NSSet
 
-extension PaymentEntitly {
+extension PaymentEntity {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<PaymentEntitly> {
-        return NSFetchRequest<PaymentEntitly>(entityName: "PaymentEntitly")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<PaymentEntity> {
+        return NSFetchRequest<PaymentEntity>(entityName: "PaymentEntity")
     }
 
     @NSManaged public var id: String?
@@ -33,6 +33,6 @@ extension PaymentEntitly {
 
 }
 
-extension PaymentEntitly: Identifiable {
+extension PaymentEntity: Identifiable {
 
 }

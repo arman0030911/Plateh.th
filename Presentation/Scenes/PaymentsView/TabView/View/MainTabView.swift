@@ -10,7 +10,6 @@ struct MainTabView: View {
         self._path = path 
     }
     var body: some View {
-        
         ZStack(alignment:.bottom ){
             TabView(selection: $selectionPage) { 
                 ContentView(path: $path)
@@ -21,26 +20,23 @@ struct MainTabView: View {
                 DepositView()
                     .tag(TabPages.deposit)
             }
-            //.padding(.bottom, 120 )
             
-            HStack(spacing: 32){
+            HStack(spacing: 10){
                 Tabitem(image: "house", text:"Ana sayfa", pageType: .main , selected: $selectionPage)
                 Tabitem(image: "list.bullet.rectangle.portrait", text:"Ödemeler", pageType: .paymentList, selected: $selectionPage)
-                
-                Tabitem(image: "list.bullet.rectangle.portrait", text:"Faiz", pageType: .deposit, selected: $selectionPage)
-             
-                 
+                Tabitem(image: "percent", text:"Faiz", pageType: .deposit, selected: $selectionPage)
             }
-            .padding(.horizontal, 18)
+            .padding(.horizontal, 10)
             .frame(maxWidth:.infinity)
-            .padding(.top, 16)
-            .padding(.bottom, 10)
-            .background(.ultraThinMaterial.opacity(0.12))
-            .clipShape(Capsule())
+            .padding(.vertical, 10)
+            .background(.ultraThinMaterial.opacity(0.18))
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
+            .overlay {
+                RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                    .stroke(AppTheme.border, lineWidth: 1)
+            }
             .padding(.horizontal, 20)
             .padding(.bottom, 8)
         } 
-         
     }
 }
-

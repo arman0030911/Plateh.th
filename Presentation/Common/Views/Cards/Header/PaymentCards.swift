@@ -28,37 +28,41 @@ struct PaymentCards: View  {
         }
     }
 
+    private var isClosed: Bool {
+        payment.isClosed
+    }
+
+    private var topStatusText: String {
+        if isClosed {
+            return "Tamamlanan ödeme"
+        }
+        return payment.type == .monthly ? "Aylık ödeme" : "Tek seferlik ödeme"
+    }
+
     var body: some View {
-        VStack(alignment:.leading, spacing:14){
-            VStack(alignment:.leading, spacing:8){
-                VStack(alignment:.leading, spacing:10){
-                    VStack(alignment:.leading, spacing:4){
+        VStack(alignment:.leading, spacing:16){
+            VStack(alignment:.leading, spacing:12){
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment:.leading, spacing:6){
+                        Text(topStatusText)
+                            .font(.appCaption(11))
+                            .foregroundStyle(.appBlack.opacity(0.58))
+                            .textCase(.uppercase)
                         Text(payment.title)
-                            .font(.appTitle(24))
+                            .font(.appTitle(23))
                             .foregroundStyle(.appBlack)
-                        
-                        HStack(spacing: 5){
-                            Text(subtitleText)
-                                .font(.appCaption(12))
-                            if payment.type == .monthly {
-                                Text("•")
-                                    .font(.appCaption(12))
-                                Text("Toplam \(payment.totalAmount.currencyText)")
-                                    .font(.appCaption(12))
-                            }
-                            
-                        }
-                        .foregroundStyle(.appBlack.opacity(0.72))
+                            .lineLimit(1)
                     }
-                    Text(payment.description.isEmpty ? "Açıklama eklenmedi" : payment.description)
-                        .font(.appCaption(12))
-                        .foregroundStyle(.appBlack.opacity(0.76))
-                        .lineLimit(2)
-                    
-                    
+                    Spacer(minLength: 12)
+                    statusBadge
                 }
-                
-                HStack {
+
+                Text(payment.description.isEmpty ? "Açıklama eklenmedi" : payment.description)
+                    .font(.appCaption(12))
+                    .foregroundStyle(.appBlack.opacity(0.68))
+                    .lineLimit(2)
+
+                HStack(alignment: .lastTextBaseline) {
                     HStack(spacing: 5){
                         Text((payment.type == .monthly ? payment.paymentAmount : payment.totalAmount).currencyText)
                             .font(.appTitle(18))
@@ -67,23 +71,14 @@ struct PaymentCards: View  {
                     }
                     .foregroundStyle(.appBlack)
                     Spacer()
-                    HStack(spacing: 5){ 
-                        Text(status.badgeTitle)
-                            .font(.appCaption(12))
-                        Text(status.badgeValue)
-                            .font(.appBody(12))
-                    }
-                    .padding(.horizontal, 11)
-                    .padding(.vertical, 7)
-                    .background(.appBlack.opacity(0.92))
-                    .foregroundStyle(.appGray)
-                    .clipShape(.capsule)
-                    
+                    Text(payment.type == .monthly ? "Toplam \(payment.totalAmount.currencyText)" : subtitleText)
+                        .font(.appCaption(12))
+                        .foregroundStyle(.appBlack.opacity(0.58))
                 } 
             }
-            HStack(spacing:4){
+            HStack(spacing:8){
                 if status.isShowPaymentButton {
-                    FullButton(text: "Öde", filltcolor: .white, textcolor: .black) {
+                    FullButton(text: "Öde", fillColor: .white, textcolor: .black) {
                         action()
                     }
                 } else {
@@ -102,17 +97,29 @@ struct PaymentCards: View  {
             }
             
         }
-        
-    
-            
-            .padding(.horizontal,16)
-            .padding(.vertical, 18)
-            .background(cardColor)
-            .clipShape(RoundedRectangle(cornerRadius: 25))
-            .overlay {
-                RoundedRectangle(cornerRadius: 25)
-                    .stroke(.white.opacity(0.08), lineWidth: 1)
-            }
+        .padding(.horizontal,16)
+        .padding(.vertical, 18)
+        .background(cardColor)
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
+        .overlay {
+            RoundedRectangle(cornerRadius: AppTheme.cardRadius)
+                .stroke(.white.opacity(0.14), lineWidth: 1)
         }
-     
+        .shadow(color: cardColor.opacity(0.14), radius: 16, y: 8)
+    }
+
+    private var statusBadge: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            Text(status.badgeTitle)
+                .font(.appCaption(10))
+                .foregroundStyle(.appGray.opacity(0.72))
+            Text(status.badgeValue)
+                .font(.appBody(12))
+                .foregroundStyle(.appGray)
+        }
+        .padding(.horizontal, 11)
+        .padding(.vertical, 7)
+        .background(.appBlack.opacity(0.92))
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.smallRadius))
+    }
 }

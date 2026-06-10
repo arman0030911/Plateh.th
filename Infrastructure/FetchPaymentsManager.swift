@@ -14,7 +14,7 @@ class FetchPaymentsManager: FetchPaymentDataSource {
                     return
                 }
 
-                let req = PaymentEntitly.fetchRequest()
+                let req = PaymentEntity.fetchRequest()
                 var predicates: [NSPredicate] = []
 
                 if let date {

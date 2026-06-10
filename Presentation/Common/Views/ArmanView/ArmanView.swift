@@ -143,7 +143,7 @@ struct ArmanView: View {
                 action: {},
                 date: $mockDate
             )
-            .clipShape(RoundedRectangle(cornerRadius: 25))
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
         }
     }
 
@@ -167,7 +167,7 @@ struct ArmanView: View {
             sectionTitle("Buttons")
 
             HStack(spacing: 12) {
-                FullButton(text: "Öde", filltcolor: .black, textcolor: .appYelow, action: nil)
+                FullButton(text: "Öde", fillColor: .black, textcolor: .appYelow, action: nil)
                 SolidButton(
                     text: "Detaylar",
                     solidColor: .appYelow,

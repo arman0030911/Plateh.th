@@ -9,10 +9,10 @@ struct HeaderView: View {
 
     var body: some View {
         ZStack {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(page.totalPrice)
-                        .font(.appDisplay(34))
+                        .font(.appDisplay(32))
                         .foregroundStyle(.appGray)
                     Spacer()
 
@@ -21,9 +21,9 @@ struct HeaderView: View {
                             action?()
                         } label: {
                             ZStack {
-                                Circle()
+                                RoundedRectangle(cornerRadius: 12)
                                     .fill(.appYelow)
-                                    .frame(width: 36, height: 36)
+                                    .frame(width: 38, height: 38)
                                 Image(systemName: "plus")
                                     .font(.system(size: 15, weight: .bold))
                                     .foregroundStyle(.appBlack)
@@ -36,7 +36,7 @@ struct HeaderView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack {
                         Text(page.title)
-                            .font(.appTitle(30))
+                            .font(.appTitle(28))
                         Spacer()
                         if page.pageType == .paymentList {
                             Button {
@@ -57,13 +57,21 @@ struct HeaderView: View {
                 Text(page.date)
                     .font(.appCaption(15))
                     .foregroundStyle(.appMint)
-                    .padding(.top, 2)
             }
             .foregroundStyle(.appYelow)
-            .padding(.horizontal, 24)
-            .padding(.top, 14)
-            .padding(.bottom, 14)
-            .background(.appBlack)
+            .padding(.horizontal, 20)
+            .padding(.top, 12)
+            .padding(.bottom, 16)
+            .background(
+                LinearGradient(
+                    colors: [
+                        .appBlack,
+                        .appBlack.opacity(0.94)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
 
             if isShowCalendar {
                 Color.black.opacity(0.4)
@@ -86,13 +94,13 @@ struct HeaderView: View {
                         .padding(8)
                         .background(Color.clear)
                         .scaleEffect(0.95)
-                        .onChange(of: nonOptionalDate.wrappedValue) { _, _ in
+                        .onChange(of: nonOptionalDate.wrappedValue) { _ in
                             isShowCalendar = false
                         }
                 }
                 .padding(16)
                 .background(.white)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .clipShape(RoundedRectangle(cornerRadius: AppTheme.cardRadius))
                 .padding(.horizontal, 24)
                 .shadow(color: .black.opacity(0.25), radius: 20, y: 12)
             }

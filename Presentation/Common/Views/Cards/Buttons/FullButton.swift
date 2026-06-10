@@ -2,7 +2,7 @@ import SwiftUI
 
 struct FullButton: View {
     var text: String 
-    var filltcolor: Color
+    var fillColor: Color
     var textcolor: Color
     var action: (() -> Void)?  
     var body: some View {
@@ -11,14 +11,12 @@ struct FullButton: View {
         } label: { 
             Text(text)
                 .font(.appBody(13))
-                .foregroundStyle(filltcolor) 
-                .padding(.vertical, 14)
+                .foregroundStyle(fillColor) 
+                .padding(.vertical, 13)
                 .frame(maxWidth:.infinity) 
                 .background(textcolor)
-                .clipShape(.capsule)
+                .clipShape(RoundedRectangle(cornerRadius: AppTheme.controlRadius))
         }
         .buttonStyle(.plain)
- 
-        
     }
 }

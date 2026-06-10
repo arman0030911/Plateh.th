@@ -8,7 +8,7 @@ class DeletePaymentManager: DeletePaymentDataSource {
         var thrownError: Error?
 
         context.performAndWait {
-            let request = PaymentEntitly.fetchRequest()
+            let request = PaymentEntity.fetchRequest()
             request.predicate = NSPredicate(format: "id == %@", id)
 
             do {
