@@ -6,14 +6,26 @@ struct HeaderView: View {
     @Binding var date: Date?
 
     @State private var isShowCalendar: Bool = false
+    @EnvironmentObject var appState: AppState
 
     var body: some View {
         ZStack {
             VStack(alignment: .leading, spacing: 12) {
+                // Top row: hamburger (left) and action button (right)
                 HStack {
-                    Text(page.totalPrice)
-                        .font(.appDisplay(32))
-                        .foregroundStyle(.appGray)
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            appState.isSideMenuOpen.toggle()
+                        }
+                    } label: {
+                        Image(systemName: "line.3.horizontal")
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.appYelow)
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+
                     Spacer()
 
                     if (page.pageType == .main || page.pageType == .deposit), action != nil {
@@ -26,7 +38,7 @@ struct HeaderView: View {
                                     .frame(width: 38, height: 38)
                                 Image(systemName: "plus")
                                     .font(.system(size: 15, weight: .bold))
-                                    .foregroundStyle(.appBlack)
+                                    .foregroundColor(.appBlack)
                             }
                         }
                         .buttonStyle(.plain)
@@ -34,9 +46,16 @@ struct HeaderView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    HStack {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(page.totalPrice)
+                            .font(.appDisplay(32))
+                            .foregroundStyle(.appGray)
+
                         Text(page.title)
                             .font(.appTitle(28))
+                    }
+
+                    HStack {
                         Spacer()
                         if page.pageType == .paymentList {
                             Button {
@@ -52,11 +71,11 @@ struct HeaderView: View {
                             .accessibilityLabel("Tarih seç")
                         }
                     }
-                }
 
-                Text(page.date)
-                    .font(.appCaption(15))
-                    .foregroundStyle(.appMint)
+                    Text(page.date)
+                        .font(.appCaption(15))
+                        .foregroundStyle(.appMint)
+                }
             }
             .foregroundStyle(.appYelow)
             .padding(.horizontal, 20)
