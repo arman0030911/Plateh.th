@@ -51,4 +51,8 @@ class Assembly {
             deleteUseCase: deleteUseCase
         )
     }
+
+    static func createLoginViewModel() -> LoginViewModel {
+        return LoginViewModel()
+    }
 }

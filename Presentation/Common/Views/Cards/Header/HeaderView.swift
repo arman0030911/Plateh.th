@@ -13,18 +13,7 @@ struct HeaderView: View {
             VStack(alignment: .leading, spacing: 12) {
                 // Top row: hamburger (left) and action button (right)
                 HStack {
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            appState.isSideMenuOpen.toggle()
-                        }
-                    } label: {
-                        Image(systemName: "line.3.horizontal")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.appYelow)
-                            .frame(width: 44, height: 44)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)
+                    MenuButton(isOpen: $appState.isSideMenuOpen)
 
                     Spacer()
 

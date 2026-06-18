@@ -11,6 +11,7 @@ enum AppRoute: Hashable {
     case details(paymentId: String)
 }
 
+@MainActor
 final class AppState: ObservableObject {
     static let shared = AppState()
 
