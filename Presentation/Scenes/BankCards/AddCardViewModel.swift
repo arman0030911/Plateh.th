@@ -45,12 +45,10 @@ final class AddCardViewModel: ObservableObject {
                 self.clearFields()
                 self.didSave = true
 
-                // auto-hide success after 2s
-                Task.detached { [weak self] in
+                // auto-hide success after 2s — schedule a MainActor child task
+                Task { @MainActor in
                     try? await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-                    await MainActor.run {
-                        self?.didSave = false
-                    }
+                    self.didSave = false
                 }
             } catch {
                 self.errorMessage = "Kaydetme sırasında hata oluştu"
