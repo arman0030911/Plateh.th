@@ -53,7 +53,7 @@ struct SideMenuProfileHeader: View {
         .buttonStyle(.plain)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
-        .accessibilityHint(user == nil ? "Кирүү экранына өтүү" : "Профиль экранына өтүү")
+        .accessibilityHint(user == nil ? "Giriş ekranına git" : "Profil ekranına git")
         .accessibilityAddTraits(.isButton)
     }
     
@@ -140,15 +140,15 @@ struct SideMenuProfileHeader: View {
             }
             .offset(x: 4, y: -4)
         }
-        .accessibilityLabel("Профильди өзгөртүү")
-        .accessibilityHint("Профиль маалыматтарын жаңыртуу")
+        .accessibilityLabel("Profili düzenle")
+        .accessibilityHint("Profil bilgilerini güncelle")
     }
     
     // MARK: - Text Views
     
     @ViewBuilder
     private var userNameView: some View {
-        Text(user?.name ?? "Кирүү")
+        Text(user?.name ?? "Giriş yapın")
             .font(.appTitle(22))
             .foregroundColor(.white)
             .lineLimit(1)
@@ -159,7 +159,7 @@ struct SideMenuProfileHeader: View {
     
     @ViewBuilder
     private var userEmailView: some View {
-        Text(user?.email ?? "Аккаунтуңузга кириңиз")
+        Text(user?.email ?? "Hesabınıza giriş yapın")
             .font(.appCaption(14))
             .foregroundColor(AppTheme.mutedText)
             .lineLimit(1)
@@ -187,7 +187,7 @@ struct SideMenuProfileHeader: View {
         if let user = user {
             return Text("\(user.name), \(user.email)")
         } else {
-            return Text("Кирүү, аккаунтуңузга жетүү")
+            return Text("Giriş yapın, hesabınıza erişin")
         }
     }
     

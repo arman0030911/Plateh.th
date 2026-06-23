@@ -3,7 +3,7 @@ import Foundation
 enum AppConfig {
     // MARK: - API Configuration
     
-    static let depositAPIBaseURL = "https://api.example.com/deposits"
+    nonisolated static let depositAPIBaseURL = "https://api.example.com/deposits"
     
     // MARK: - App Info
     
