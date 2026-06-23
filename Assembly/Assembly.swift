@@ -1,49 +1,61 @@
 import Foundation
 
-class Assembly { 
+// MARK: - Assembly / Dependency Injection Container
+// Responsible for composing dependencies following Clean Architecture principles
+
+final class Assembly {
+    
+    // MARK: - Main ViewModel
+    
     static func createMainViewModel() -> MainViewModel {
         let dataSource = FetchPaymentsManager()
-        let repo = FetchPaymentsRepositoryImpl(dataSource:dataSource)
-        let useCase = FetchPaymentsUseCaseImpl(repository:repo )
+        let repository = FetchPaymentsRepositoryImpl(dataSource: dataSource)
+        let useCase = FetchPaymentsUseCaseImpl(repository: repository)
         
-         let setDataSource = SetPaymentManager()
-         let setRepo = SetPaymentRepositoryImpl(dataSource: setDataSource)
-         let setUseCase = SetPaymentUseCaseImpl(repository: setRepo)
+        let setDataSource = SetPaymentManager()
+        let setRepository = SetPaymentRepositoryImpl(dataSource: setDataSource)
+        let setUseCase = SetPaymentUseCaseImpl(repository: setRepository)
         
-        return MainViewModel(FetchUseCase: useCase, setUseCase: setUseCase )
+        return MainViewModel(fetchUseCase: useCase, setUseCase: setUseCase)
     }
     
-    static func createAddViewModel() -> AddViewModel{
+    // MARK: - Add ViewModel
+    
+    static func createAddViewModel() -> AddViewModel {
         let manager = CreatePaymentManager()
-        let repo = CreatePaymentRepositoryImpl(dataSource:manager)
-        let useCase = CreatePaymentUseCaseImpl(repository: repo)
-        return AddViewModel(createUseCase: useCase )
+        let repository = CreatePaymentRepositoryImpl(dataSource: manager)
+        let useCase = CreatePaymentUseCaseImpl(repository: repository)
+        return AddViewModel(createUseCase: useCase)
     }
     
-    static func createPaymentsViewModel() -> PaymentsViewModel { 
-        let dataSource = FetchPaymentsManager () 
-        let repo = FetchPaymentsRepositoryImpl(dataSource: dataSource)
-        let useCase = FetchPaymentsUseCaseImpl(repository: repo)
+    // MARK: - Payments ViewModel
+    
+    static func createPaymentsViewModel() -> PaymentsViewModel {
+        let dataSource = FetchPaymentsManager()
+        let repository = FetchPaymentsRepositoryImpl(dataSource: dataSource)
+        let useCase = FetchPaymentsUseCaseImpl(repository: repository)
 
         let setDataSource = SetPaymentManager()
-        let setRepo = SetPaymentRepositoryImpl(dataSource: setDataSource)
-        let setUseCase = SetPaymentUseCaseImpl(repository: setRepo)
+        let setRepository = SetPaymentRepositoryImpl(dataSource: setDataSource)
+        let setUseCase = SetPaymentUseCaseImpl(repository: setRepository)
 
         return PaymentsViewModel(fetchUseCase: useCase, setUseCase: setUseCase)
     }
 
+    // MARK: - Details ViewModel
+    
     static func createDetailsViewModel() -> DetailsViewModel {
         let fetchDataSource = FetchPaymentsManager()
-        let fetchRepo = FetchPaymentsRepositoryImpl(dataSource: fetchDataSource)
-        let fetchUseCase = FetchPaymentsUseCaseImpl(repository: fetchRepo)
+        let fetchRepository = FetchPaymentsRepositoryImpl(dataSource: fetchDataSource)
+        let fetchUseCase = FetchPaymentsUseCaseImpl(repository: fetchRepository)
 
         let updateDataSource = UpdatePaymentManager()
-        let updateRepo = UpdatePaymentRepositoryImpl(dataSource: updateDataSource)
-        let updateUseCase = UpdatePaymentUseCaseImpl(repository: updateRepo)
+        let updateRepository = UpdatePaymentRepositoryImpl(dataSource: updateDataSource)
+        let updateUseCase = UpdatePaymentUseCaseImpl(repository: updateRepository)
 
         let deleteDataSource = DeletePaymentManager()
-        let deleteRepo = DeletePaymentRepositoryImpl(dataSource: deleteDataSource)
-        let deleteUseCase = DeletePaymentUseCaseImpl(repository: deleteRepo)
+        let deleteRepository = DeletePaymentRepositoryImpl(dataSource: deleteDataSource)
+        let deleteUseCase = DeletePaymentUseCaseImpl(repository: deleteRepository)
 
         return DetailsViewModel(
             fetchUseCase: fetchUseCase,
@@ -52,6 +64,8 @@ class Assembly {
         )
     }
 
+    // MARK: - Login ViewModel
+    
     static func createLoginViewModel() -> LoginViewModel {
         return LoginViewModel()
     }
