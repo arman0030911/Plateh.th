@@ -150,12 +150,11 @@ struct SideMenuProfileHeader: View {
     private var userNameView: some View {
         Text(user?.name ?? "Кирүү")
             .font(.appTitle(22))
-            .fontWeight(.semibold)
             .foregroundColor(.white)
             .lineLimit(1)
             .truncationMode(.tail)
             .minimumScaleFactor(0.8)
-            .accessibilityTraits(.header)
+            .accessibilityAddTraits(.isHeader)
     }
     
     @ViewBuilder
