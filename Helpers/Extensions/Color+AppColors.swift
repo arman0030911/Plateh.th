@@ -1,13 +1,9 @@
 import SwiftUI
 
 extension Color {
-    // MARK: - App Custom Colors
+    // MARK: - App Custom Colors (not in asset catalog)
     
-    static let appBlack = Color(hex: "1A1A1A")
-    static let appGray = Color(hex: "8E8E93")
-    static let appYelow = Color(hex: "FFD60A")
-    static let appMint = Color(hex: "30D158")
-    static let appRed = Color(hex: "FF453A")
+    /// Card surface color — only defined here, not auto-generated from Assets.
     static let appCard = Color(hex: "2C2C2E")
     
     // MARK: - Helper

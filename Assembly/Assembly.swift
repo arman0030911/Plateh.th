@@ -16,7 +16,7 @@ final class Assembly {
         let setRepository = SetPaymentRepositoryImpl(dataSource: setDataSource)
         let setUseCase = SetPaymentUseCaseImpl(repository: setRepository)
         
-        return MainViewModel(fetchUseCase: useCase, setUseCase: setUseCase)
+        return MainViewModel(FetchUseCase: useCase, setUseCase: setUseCase)
     }
     
     // MARK: - Add ViewModel
