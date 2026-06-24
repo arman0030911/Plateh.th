@@ -1,95 +1,100 @@
 import SwiftUI
 
-// MARK: - SideMenuProfileHeader
-
-/// Премиальная шапка профиля для бокового меню.
-/// Современный дизайн с градиентной аватаркой, иконкой редактирования и плавными анимациями.
-/// Полностью интегрирована в дизайн-систему приложения (AppTheme, AppFont, AppColors).
+/// Horizontal account capsule for the Glass Banking side menu.
 struct SideMenuProfileHeader: View {
-    // MARK: - Properties
-    
     var user: UserProfile?
     @EnvironmentObject private var appState: AppState
-    
-    // MARK: - Constants
-    
-    private enum Metrics {
-        static let avatarSize: CGFloat = 92
-        static let avatarBorderWidth: CGFloat = 3.5
-        static let editIconSize: CGFloat = 28
-        static let verticalSpacing: CGFloat = 14
-        static let horizontalPadding: CGFloat = 24
-        static let verticalPadding: CGFloat = 20
-        static let shadowRadius: CGFloat = 8
-        static let shadowYOffset: CGFloat = 3
-        static let tapScale: CGFloat = 0.96
-        static let animationDuration: Double = 0.25
-    }
-    
     @State private var isPressed: Bool = false
-    
-    // MARK: - Body
-    
+
+    private enum Metrics {
+        static let avatarSize: CGFloat = 62
+        static let avatarBorderWidth: CGFloat = 2
+        static let editButtonSize: CGFloat = 34
+        static let cornerRadius: CGFloat = 22
+        static let tapScale: CGFloat = 0.98
+        static let animationDuration: Double = 0.20
+    }
+
     var body: some View {
-        Button(action: headerTapped) {
-            VStack(spacing: Metrics.verticalSpacing) {
-                // Avatar with gradient border and edit button
-                avatarContainer
-                
-                // User name
-                userNameView
-                
-                // User email or login prompt
-                userEmailView
+        HStack(spacing: 14) {
+            avatarView
+
+            VStack(alignment: .leading, spacing: 5) {
+                Text(user?.name ?? "Giriş yapın")
+                    .font(.appTitle(17))
+                    .foregroundColor(.white)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .minimumScaleFactor(0.78)
+                    .accessibilityAddTraits(.isHeader)
+
+                Text(user?.email ?? "Hesabınıza giriş yapın")
+                    .font(.appCaption(12))
+                    .foregroundColor(AppTheme.mutedText)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .minimumScaleFactor(0.75)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, Metrics.horizontalPadding)
-            .padding(.vertical, Metrics.verticalPadding)
-            .background(backgroundGradient)
-            .contentShape(Rectangle())
-            .scaleEffect(isPressed ? Metrics.tapScale : 1.0)
-            .animation(.easeInOut(duration: Metrics.animationDuration), value: isPressed)
+
+            Spacer(minLength: 8)
+
+            editActionView
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 14)
+        .padding(.vertical, 14)
+        .background(capsuleBackground)
+        .contentShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius))
+        .scaleEffect(isPressed ? Metrics.tapScale : 1.0)
+        .animation(.easeInOut(duration: Metrics.animationDuration), value: isPressed)
+        .onTapGesture(perform: headerTapped)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(accessibilityLabel)
         .accessibilityHint(user == nil ? "Giriş ekranına git" : "Profil ekranına git")
         .accessibilityAddTraits(.isButton)
     }
-    
-    // MARK: - Avatar Container
-    
+
     @ViewBuilder
-    private var avatarContainer: some View {
-        ZStack(alignment: .topTrailing) {
-            // Gradient border circle
+    private var avatarView: some View {
+        ZStack(alignment: .bottomTrailing) {
             Circle()
-                .stroke(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color.appMint,
-                            Color.appMint.opacity(0.72)
-                        ]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
-                    lineWidth: Metrics.avatarBorderWidth
-                )
+                .fill(Color.appMint.opacity(0.12))
                 .frame(width: Metrics.avatarSize, height: Metrics.avatarSize)
-                .shadow(color: Color.appMint.opacity(0.24), radius: Metrics.shadowRadius, x: 0, y: Metrics.shadowYOffset)
-            
-            // Avatar content
+                .overlay(
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                gradient: Gradient(colors: [
+                                    Color.appMint.opacity(0.92),
+                                    Color.white.opacity(0.18)
+                                ]),
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: Metrics.avatarBorderWidth
+                        )
+                )
+                .shadow(color: Color.appMint.opacity(0.18), radius: 10, x: 0, y: 6)
+
             avatarContent
-                .frame(width: Metrics.avatarSize - Metrics.avatarBorderWidth * 2, height: Metrics.avatarSize - Metrics.avatarBorderWidth * 2)
+                .frame(
+                    width: Metrics.avatarSize - Metrics.avatarBorderWidth * 2,
+                    height: Metrics.avatarSize - Metrics.avatarBorderWidth * 2
+                )
                 .clipShape(Circle())
-            
-            // Edit button
+
             if user != nil {
-                editButton
+                Circle()
+                    .fill(Color.appMint)
+                    .frame(width: 13, height: 13)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.appBlack.opacity(0.85), lineWidth: 2)
+                    )
+                    .offset(x: -2, y: -2)
             }
         }
     }
-    
+
     @ViewBuilder
     private var avatarContent: some View {
         if let profile = user, let data = profile.avatarData, let uiImage = UIImage(data: data) {
@@ -97,92 +102,63 @@ struct SideMenuProfileHeader: View {
                 .resizable()
                 .scaledToFill()
         } else {
-            placeholderAvatar
-        }
-    }
-    
-    @ViewBuilder
-    private var placeholderAvatar: some View {
-        ZStack {
-            Circle()
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color.appMint.opacity(0.18),
-                            Color.appMint.opacity(0.08)
-                        ]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+            ZStack {
+                Circle()
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color.appMint.opacity(0.24),
+                                Color.white.opacity(0.06)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
                     )
-                )
-            
-            Image(systemName: "person.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: Metrics.avatarSize * 0.45, height: Metrics.avatarSize * 0.45)
-                .foregroundColor(Color.appMint)
+
+                Image(systemName: user == nil ? "person.crop.circle.badge.plus" : "person.fill")
+                    .font(.system(size: user == nil ? 25 : 23, weight: .semibold))
+                    .foregroundColor(Color.appMint)
+            }
         }
     }
-    
+
     @ViewBuilder
-    private var editButton: some View {
+    private var editActionView: some View {
         Button(action: editProfileTapped) {
             ZStack {
                 Circle()
-                    .fill(Color.appBlack)
-                    .frame(width: Metrics.editIconSize, height: Metrics.editIconSize)
-                
-                Image(systemName: "pencil.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: Metrics.editIconSize * 0.75, height: Metrics.editIconSize * 0.75)
+                    .fill(Color.white.opacity(0.07))
+                    .frame(width: Metrics.editButtonSize, height: Metrics.editButtonSize)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    )
+
+                Image(systemName: user == nil ? "arrow.right" : "pencil")
+                    .font(.system(size: 13, weight: .bold))
                     .foregroundColor(Color.appMint)
             }
-            .offset(x: 4, y: -4)
         }
-        .accessibilityLabel("Profili düzenle")
-        .accessibilityHint("Profil bilgilerini güncelle")
+        .buttonStyle(.plain)
+        .accessibilityLabel(user == nil ? "Giriş yap" : "Profili düzenle")
+        .accessibilityHint(user == nil ? "Giriş ekranına git" : "Profil bilgilerini güncelle")
     }
-    
-    // MARK: - Text Views
-    
+
     @ViewBuilder
-    private var userNameView: some View {
-        Text(user?.name ?? "Giriş yapın")
-            .font(.appTitle(22))
-            .foregroundColor(.white)
-            .lineLimit(1)
-            .truncationMode(.tail)
-            .minimumScaleFactor(0.8)
-            .accessibilityAddTraits(.isHeader)
+    private var capsuleBackground: some View {
+        RoundedRectangle(cornerRadius: Metrics.cornerRadius)
+            .fill(AppTheme.elevatedSurface)
+            .background(
+                RoundedRectangle(cornerRadius: Metrics.cornerRadius)
+                    .fill(.ultraThinMaterial)
+                    .opacity(0.45)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: Metrics.cornerRadius)
+                    .stroke(Color.appMint.opacity(0.16), lineWidth: 1)
+            )
     }
-    
-    @ViewBuilder
-    private var userEmailView: some View {
-        Text(user?.email ?? "Hesabınıza giriş yapın")
-            .font(.appCaption(14))
-            .foregroundColor(AppTheme.mutedText)
-            .lineLimit(1)
-            .truncationMode(.tail)
-            .minimumScaleFactor(0.75)
-    }
-    
-    // MARK: - Background
-    
-    @ViewBuilder
-    private var backgroundGradient: some View {
-        LinearGradient(
-            gradient: Gradient(colors: [
-                Color.appBlack,
-                Color.appCard.opacity(0.65)
-            ]),
-            startPoint: .leading,
-            endPoint: .trailing
-        )
-    }
-    
-    // MARK: - Accessibility
-    
+
     private var accessibilityLabel: Text {
         if let user = user {
             return Text("\(user.name), \(user.email)")
@@ -190,45 +166,37 @@ struct SideMenuProfileHeader: View {
             return Text("Giriş yapın, hesabınıza erişin")
         }
     }
-    
-    // MARK: - Actions
-    
+
     private func headerTapped() {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-            isPressed = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
-                isPressed = false
-            }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+        animatePress {
             appState.isSideMenuOpen = false
             appState.route = (user == nil) ? .login : .profile
         }
     }
-    
+
     private func editProfileTapped() {
-        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+        animatePress {
+            appState.isSideMenuOpen = false
+            appState.route = user == nil ? .login : .profile
+        }
+    }
+
+    private func animatePress(completion: @escaping () -> Void) {
+        withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
             isPressed = true
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+            withAnimation(.spring(response: 0.28, dampingFraction: 0.88)) {
                 isPressed = false
             }
         }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-            appState.isSideMenuOpen = false
-            appState.route = .profile
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.20) {
+            completion()
         }
     }
 }
-
-// MARK: - Preview
 
 #Preview("Logged In") {
     SideMenuProfileHeader(
@@ -242,17 +210,21 @@ struct SideMenuProfileHeader: View {
         )
     )
     .environmentObject(AppState.shared)
+    .padding()
+    .background(Color.appBlack)
 }
 
 #Preview("Not Logged In") {
     SideMenuProfileHeader(user: nil)
         .environmentObject(AppState.shared)
+        .padding()
+        .background(Color.appBlack)
 }
 
 #Preview("With Avatar") {
     let sampleImage = UIImage(systemName: "person.crop.circle.fill")!
     let pngData = sampleImage.pngData()!
-    
+
     return SideMenuProfileHeader(
         user: UserProfile(
             id: "2",
@@ -264,4 +236,6 @@ struct SideMenuProfileHeader: View {
         )
     )
     .environmentObject(AppState.shared)
+    .padding()
+    .background(Color.appBlack)
 }

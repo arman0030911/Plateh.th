@@ -1,15 +1,23 @@
 import SwiftUI
 import UIKit
 
-/// Root Side Menu view — главный контейнер меню с полной интеграцией в дизайн-систему.
-/// Использует AppTheme, AppFont и современные паттерны SwiftUI.
-/// Компоненты вынесены в SideMenuProfileHeader и SideMenuRow.
+/// Root Side Menu view with the Glass Banking visual treatment.
 struct SideMenuView: View {
     @EnvironmentObject var appState: AppState
     @State private var dragOffset: CGFloat = 0
 
+    private enum Metrics {
+        static let iPhoneWidthFraction: CGFloat = 0.80
+        static let iPadWidthFraction: CGFloat = 0.46
+        static let panelRadius: CGFloat = 28
+        static let horizontalPadding: CGFloat = 18
+        static let rowSpacing: CGFloat = 8
+    }
+
     private var widthFraction: CGFloat {
-        UIDevice.current.userInterfaceIdiom == .pad ? 0.45 : 0.78
+        UIDevice.current.userInterfaceIdiom == .pad
+            ? Metrics.iPadWidthFraction
+            : Metrics.iPhoneWidthFraction
     }
 
     var body: some View {
@@ -17,10 +25,9 @@ struct SideMenuView: View {
             let menuWidth = geo.size.width * widthFraction
 
             ZStack(alignment: .leading) {
-                // Полупрозрачный фон, затемняет контент за меню
                 if appState.isSideMenuOpen {
                     Color.black
-                        .opacity(0.36)
+                        .opacity(0.48)
                         .ignoresSafeArea()
                         .transition(.opacity)
                         .onTapGesture {
@@ -28,110 +35,152 @@ struct SideMenuView: View {
                         }
                 }
 
-                // Меню-контейнер
-                VStack(alignment: .leading, spacing: 0) {
-                    // Профильная шапка: аватарка, имя, email
-                    SideMenuProfileHeader(user: appState.userProfile)
-                        .environmentObject(appState)
-                        .padding(.horizontal, AppTheme.screenPadding)
-                        .padding(.top, geo.safeAreaInsets.top + 18)
-                        .padding(.bottom, 12)
-
-                    // Разделитель с корректным цветом из дизайн-системы
-                    Divider()
-                        .background(AppTheme.border)
-                        .padding(.horizontal, AppTheme.screenPadding)
-
-                    // Список пунктов меню
-                    VStack(spacing: 8) {
-                        menuRow(
-                            icon: "person.fill",
-                            title: "Profilim",
-                            route: .profile
-                        )
-                        menuRow(
-                            icon: "creditcard.fill",
-                            title: "Banka Kartlarım",
-                            route: .bankCards
-                        )
-                        menuRow(
-                            icon: "gearshape.fill",
-                            title: "Ayarlar",
-                            route: .settings
-                        )
-
-                        // Выход (отдельная строка с красным акцентом)
-                        SideMenuRow(
-                            icon: "arrow.left.square.fill",
-                            title: "Güvenli Çıkış",
-                            tint: Color(red: 1.0, green: 0.5, blue: 0.5),
-                            isActive: false
-                        ) {
-                            handleLogout()
-                        }
-                    }
-                    .padding(.horizontal, AppTheme.screenPadding)
-                    .padding(.top, 16)
-
-                    Spacer()
-
-                    // Версия приложения в подвале
-                    HStack {
-                        Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
-                            .font(.appCaption(11))
-                            .foregroundColor(AppTheme.mutedText)
-                        Spacer()
-                    }
-                    .padding(.horizontal, AppTheme.screenPadding)
-                    .padding(.bottom, geo.safeAreaInsets.bottom + 14)
-                }
-                .frame(width: menuWidth)
-                // Фон: AppBlack + тонкий мятный градиент для визуальной гармонии
-                .background(
-                    ZStack {
-                        Color.appBlack
-
-                        // Едва заметный градиент в стиле HeaderView
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color.appBlack.opacity(0.0),
-                                Color.appMint.opacity(0.03)
-                            ]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                        .blendMode(.overlay)
-                    }
-                )
-                // Лёгкий материальный эффект для глубины (как bottom nav)
-                .overlay(
-                    Rectangle()
-                        .fill(.ultraThinMaterial)
-                        .opacity(0.04)
-                        .allowsHitTesting(false)
-                )
-                // Скругление только правой стороны (меню "выезжает" со слева)
-                .clipShape(RoundedCorners(radius: AppTheme.cardRadius, corners: [.topRight, .bottomRight]))
-                // Тень для эффекта глубины
-                .shadow(
-                    color: Color.black.opacity(0.45),
-                    radius: 18,
-                    x: 6,
-                    y: 0
-                )
-                // Позиция с поддержкой drag-жестов
-                .offset(x: (appState.isSideMenuOpen ? 0 : -menuWidth) + dragOffset)
-                .gesture(dragGesture(menuWidth: menuWidth))
-                .animation(
-                    .interactiveSpring(response: 0.28, dampingFraction: 0.85),
-                    value: appState.isSideMenuOpen
-                )
+                menuPanel(menuWidth: menuWidth, safeAreaInsets: geo.safeAreaInsets)
+                    .offset(x: (appState.isSideMenuOpen ? 0 : -menuWidth) + dragOffset)
+                    .gesture(dragGesture(menuWidth: menuWidth))
+                    .animation(
+                        .interactiveSpring(response: 0.28, dampingFraction: 0.85),
+                        value: appState.isSideMenuOpen
+                    )
             }
         }
         .accessibilityHidden(!appState.isSideMenuOpen)
     }
 
-    // MARK: - Private Methods
+    @ViewBuilder
+    private func menuPanel(menuWidth: CGFloat, safeAreaInsets: EdgeInsets) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            SideMenuProfileHeader(user: appState.userProfile)
+                .environmentObject(appState)
+                .padding(.horizontal, Metrics.horizontalPadding)
+                .padding(.top, safeAreaInsets.top + 18)
+                .padding(.bottom, 18)
+
+            VStack(spacing: Metrics.rowSpacing) {
+                menuRow(
+                    icon: "person.fill",
+                    title: "Profilim",
+                    route: .profile
+                )
+                menuRow(
+                    icon: "creditcard.fill",
+                    title: "Banka Kartlarım",
+                    route: .bankCards
+                )
+                menuRow(
+                    icon: "gearshape.fill",
+                    title: "Ayarlar",
+                    route: .settings
+                )
+
+                SideMenuRow(
+                    icon: "arrow.left.square.fill",
+                    title: "Güvenli Çıkış",
+                    tint: Color(red: 1.0, green: 0.45, blue: 0.45),
+                    isActive: false
+                ) {
+                    handleLogout()
+                }
+                .padding(.top, 8)
+            }
+            .padding(.horizontal, Metrics.horizontalPadding)
+
+            Spacer(minLength: 24)
+
+            footerView
+                .padding(.horizontal, Metrics.horizontalPadding)
+                .padding(.bottom, safeAreaInsets.bottom + 16)
+        }
+        .frame(width: menuWidth)
+        .background(panelBackground)
+        .overlay(panelBorder)
+        .clipShape(RoundedCorners(radius: Metrics.panelRadius, corners: [.topRight, .bottomRight]))
+        .shadow(color: Color.black.opacity(0.42), radius: 28, x: 12, y: 0)
+        .shadow(color: Color.appMint.opacity(0.10), radius: 22, x: 4, y: 0)
+    }
+
+    @ViewBuilder
+    private var panelBackground: some View {
+        ZStack {
+            Rectangle()
+                .fill(.ultraThinMaterial)
+
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.appBlack.opacity(0.88),
+                    Color.appCard.opacity(0.66),
+                    Color.appBlack.opacity(0.78)
+                ]),
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            Color.appMint
+                .opacity(0.035)
+        }
+    }
+
+    @ViewBuilder
+    private var panelBorder: some View {
+        HStack(spacing: 0) {
+            Spacer()
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            Color.appMint.opacity(0.48),
+                            Color.white.opacity(0.10),
+                            Color.appMint.opacity(0.24)
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(width: 1)
+        }
+        .allowsHitTesting(false)
+    }
+
+    @ViewBuilder
+    private var footerView: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color.appMint.opacity(0.13))
+                    .frame(width: 38, height: 38)
+
+                Image(systemName: "creditcard.and.123")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(Color.appMint)
+            }
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Plateh.th")
+                    .font(.appBody(14))
+                    .foregroundColor(.white)
+
+                Text("v\(appVersion)")
+                    .font(.appCaption(11))
+                    .foregroundColor(AppTheme.mutedText)
+            }
+
+            Spacer()
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 12)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(AppTheme.surface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                )
+        )
+    }
+
+    private var appVersion: String {
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+    }
 
     @ViewBuilder
     private func menuRow(
@@ -196,9 +245,6 @@ struct SideMenuView: View {
     }
 }
 
-// MARK: - Helper Shape
-
-/// Форма для скругления только определённых углов меню
 fileprivate struct RoundedCorners: Shape {
     let radius: CGFloat
     let corners: UIRectCorner
