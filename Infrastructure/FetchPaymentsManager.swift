@@ -1,5 +1,3 @@
-
-
 import Foundation
 import CoreData
 
@@ -8,12 +6,7 @@ class FetchPaymentsManager: FetchPaymentDataSource {
 
     func fetchPayments(date: Date?, includeClosed: Bool) async throws -> [Payment] {
         try await withCheckedThrowingContinuation { continuation in
-            context.perform { [weak self] in
-                guard let self = self else {
-                    continuation.resume(throwing: CancellationError())
-                    return
-                }
-
+            context.perform {
                 let req = PaymentEntity.fetchRequest()
                 var predicates: [NSPredicate] = []
 

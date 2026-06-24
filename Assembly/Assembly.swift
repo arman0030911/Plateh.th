@@ -5,18 +5,27 @@ import Foundation
 
 final class Assembly {
     
+    // MARK: - Shared Dependencies
+    
+    private static func makeFetchPaymentsUseCase() -> FetchPaymentsUseCase {
+        let dataSource = FetchPaymentsManager()
+        let repository = FetchPaymentsRepositoryImpl(dataSource: dataSource)
+        return FetchPaymentsUseCaseImpl(repository: repository)
+    }
+    
+    private static func makeSetPaymentUseCase() -> SetPaymentUseCase {
+        let dataSource = SetPaymentManager()
+        let repository = SetPaymentRepositoryImpl(dataSource: dataSource)
+        return SetPaymentUseCaseImpl(repository: repository)
+    }
+    
     // MARK: - Main ViewModel
     
     static func createMainViewModel() -> MainViewModel {
-        let dataSource = FetchPaymentsManager()
-        let repository = FetchPaymentsRepositoryImpl(dataSource: dataSource)
-        let useCase = FetchPaymentsUseCaseImpl(repository: repository)
+        let fetchUseCase = makeFetchPaymentsUseCase()
+        let setUseCase = makeSetPaymentUseCase()
         
-        let setDataSource = SetPaymentManager()
-        let setRepository = SetPaymentRepositoryImpl(dataSource: setDataSource)
-        let setUseCase = SetPaymentUseCaseImpl(repository: setRepository)
-        
-        return MainViewModel(FetchUseCase: useCase, setUseCase: setUseCase)
+        return MainViewModel(FetchUseCase: fetchUseCase, setUseCase: setUseCase)
     }
     
     // MARK: - Add ViewModel
@@ -31,24 +40,17 @@ final class Assembly {
     // MARK: - Payments ViewModel
     
     static func createPaymentsViewModel() -> PaymentsViewModel {
-        let dataSource = FetchPaymentsManager()
-        let repository = FetchPaymentsRepositoryImpl(dataSource: dataSource)
-        let useCase = FetchPaymentsUseCaseImpl(repository: repository)
-
-        let setDataSource = SetPaymentManager()
-        let setRepository = SetPaymentRepositoryImpl(dataSource: setDataSource)
-        let setUseCase = SetPaymentUseCaseImpl(repository: setRepository)
-
-        return PaymentsViewModel(fetchUseCase: useCase, setUseCase: setUseCase)
+        let fetchUseCase = makeFetchPaymentsUseCase()
+        let setUseCase = makeSetPaymentUseCase()
+        
+        return PaymentsViewModel(fetchUseCase: fetchUseCase, setUseCase: setUseCase)
     }
 
     // MARK: - Details ViewModel
     
     static func createDetailsViewModel() -> DetailsViewModel {
-        let fetchDataSource = FetchPaymentsManager()
-        let fetchRepository = FetchPaymentsRepositoryImpl(dataSource: fetchDataSource)
-        let fetchUseCase = FetchPaymentsUseCaseImpl(repository: fetchRepository)
-
+        let fetchUseCase = makeFetchPaymentsUseCase()
+        
         let updateDataSource = UpdatePaymentManager()
         let updateRepository = UpdatePaymentRepositoryImpl(dataSource: updateDataSource)
         let updateUseCase = UpdatePaymentUseCaseImpl(repository: updateRepository)

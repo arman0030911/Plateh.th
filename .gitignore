@@ -1,42 +1,31 @@
-# Xcode
-*.xcodeproj/
-*.xcworkspace/
-*.xcuserdatad/
-*.swiftpm/
+```
+# Build artifacts
+*.o
+*.obj
+*.out
 
-# Build
+# Dependencies
+Pods/
+Carthage/
 build/
 DerivedData/
+
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
 # Environment
 .env
 .env.local
 .env.*
 
-# Logs
-*.log
-
-# Temporary files
-*.tmp
-*.swp
-
-# Dependencies
-Packages/
-Package.resolved
-Carthage/
-CocoaPods/
-Pods/
-Podfile.lock
-
-# System
-.DS_Store
-Thumbs.db
-
-# Coverage
-.coverage
-coverage/
-htmlcov/
-
-# IDE
+# Editors
 .vscode/
 .idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+```
