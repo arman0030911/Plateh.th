@@ -26,9 +26,15 @@ struct SideMenuView: View {
 
             ZStack(alignment: .leading) {
                 if appState.isSideMenuOpen {
-                    Color.black
-                        .opacity(0.48)
+                    Color.appBlack
+                        .opacity(0.54)
                         .ignoresSafeArea()
+                        .overlay {
+                            Rectangle()
+                                .fill(.ultraThinMaterial)
+                                .opacity(0.12)
+                                .ignoresSafeArea()
+                        }
                         .transition(.opacity)
                         .onTapGesture {
                             closeMenu()
@@ -49,6 +55,30 @@ struct SideMenuView: View {
 
     @ViewBuilder
     private func menuPanel(menuWidth: CGFloat, safeAreaInsets: EdgeInsets) -> some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: 14) {
+                    menuContent(safeAreaInsets: safeAreaInsets)
+                }
+            } else {
+                menuContent(safeAreaInsets: safeAreaInsets)
+            }
+        }
+        .frame(width: menuWidth)
+        .background(panelBackground)
+        .overlay(panelBorder)
+        .clipShape(RoundedCorners(radius: Metrics.panelRadius, corners: [.topRight, .bottomRight]))
+        .liquidGlassSurface(
+            tint: Color.appMint.opacity(0.08),
+            cornerRadius: Metrics.panelRadius,
+            fallbackFill: Color.clear
+        )
+        .shadow(color: Color.black.opacity(0.42), radius: 28, x: 12, y: 0)
+        .shadow(color: Color.appMint.opacity(0.14), radius: 24, x: 4, y: 0)
+    }
+
+    @ViewBuilder
+    private func menuContent(safeAreaInsets: EdgeInsets) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             SideMenuProfileHeader(user: appState.userProfile)
                 .environmentObject(appState)
@@ -56,34 +86,8 @@ struct SideMenuView: View {
                 .padding(.top, safeAreaInsets.top + 18)
                 .padding(.bottom, 18)
 
-            VStack(spacing: Metrics.rowSpacing) {
-                menuRow(
-                    icon: "person.fill",
-                    title: "Profilim",
-                    route: .profile
-                )
-                menuRow(
-                    icon: "creditcard.fill",
-                    title: "Banka Kartlarım",
-                    route: .bankCards
-                )
-                menuRow(
-                    icon: "gearshape.fill",
-                    title: "Ayarlar",
-                    route: .settings
-                )
-
-                SideMenuRow(
-                    icon: "arrow.left.square.fill",
-                    title: "Güvenli Çıkış",
-                    tint: Color(red: 1.0, green: 0.45, blue: 0.45),
-                    isActive: false
-                ) {
-                    handleLogout()
-                }
-                .padding(.top, 8)
-            }
-            .padding(.horizontal, Metrics.horizontalPadding)
+            menuRows
+                .padding(.horizontal, Metrics.horizontalPadding)
 
             Spacer(minLength: 24)
 
@@ -91,12 +95,37 @@ struct SideMenuView: View {
                 .padding(.horizontal, Metrics.horizontalPadding)
                 .padding(.bottom, safeAreaInsets.bottom + 16)
         }
-        .frame(width: menuWidth)
-        .background(panelBackground)
-        .overlay(panelBorder)
-        .clipShape(RoundedCorners(radius: Metrics.panelRadius, corners: [.topRight, .bottomRight]))
-        .shadow(color: Color.black.opacity(0.42), radius: 28, x: 12, y: 0)
-        .shadow(color: Color.appMint.opacity(0.10), radius: 22, x: 4, y: 0)
+    }
+
+    @ViewBuilder
+    private var menuRows: some View {
+        VStack(spacing: Metrics.rowSpacing) {
+            menuRow(
+                icon: "person.fill",
+                title: "Profilim",
+                route: .profile
+            )
+            menuRow(
+                icon: "creditcard.fill",
+                title: "Banka Kartlarım",
+                route: .bankCards
+            )
+            menuRow(
+                icon: "gearshape.fill",
+                title: "Ayarlar",
+                route: .settings
+            )
+
+            SideMenuRow(
+                icon: "arrow.left.square.fill",
+                title: "Güvenli Çıkış",
+                tint: Color(red: 1.0, green: 0.45, blue: 0.45),
+                isActive: false
+            ) {
+                handleLogout()
+            }
+            .padding(.top, 8)
+        }
     }
 
     @ViewBuilder
@@ -107,9 +136,9 @@ struct SideMenuView: View {
 
             LinearGradient(
                 gradient: Gradient(colors: [
-                    Color.appBlack.opacity(0.88),
-                    Color.appCard.opacity(0.66),
-                    Color.appBlack.opacity(0.78)
+                    Color.appBlack.opacity(0.72),
+                    Color.appCard.opacity(0.48),
+                    Color.appBlack.opacity(0.62)
                 ]),
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -170,11 +199,16 @@ struct SideMenuView: View {
         .padding(.vertical, 12)
         .background(
             RoundedRectangle(cornerRadius: 18)
-                .fill(AppTheme.surface)
+                .fill(Color.white.opacity(0.055))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18)
                         .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
+        )
+        .liquidGlassSurface(
+            tint: Color.appMint.opacity(0.07),
+            cornerRadius: 18,
+            fallbackFill: AppTheme.surface
         )
     }
 
@@ -256,5 +290,22 @@ fileprivate struct RoundedCorners: Shape {
             cornerRadii: CGSize(width: radius, height: radius)
         )
         return Path(path.cgPath)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func liquidGlassSurface(tint: Color, cornerRadius: CGFloat, fallbackFill: Color) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(
+                .regular.tint(tint),
+                in: .rect(cornerRadius: cornerRadius)
+            )
+        } else {
+            self.background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .fill(fallbackFill)
+            )
+        }
     }
 }

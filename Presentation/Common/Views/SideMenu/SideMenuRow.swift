@@ -34,6 +34,10 @@ struct SideMenuRow: View {
             .frame(height: Metrics.rowHeight)
             .background(rowBackground)
             .contentShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius))
+            .liquidGlassRow(
+                tint: isActive ? Color.appMint.opacity(0.16) : tint.opacity(0.045),
+                cornerRadius: Metrics.cornerRadius
+            )
         }
         .buttonStyle(.plain)
         .accessibilityElement(children: .ignore)
@@ -127,5 +131,19 @@ struct SideMenuRow_Previews: PreviewProvider {
         .padding(20)
         .background(Color.appBlack)
         .previewLayout(.sizeThatFits)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func liquidGlassRow(tint: Color, cornerRadius: CGFloat) -> some View {
+        if #available(iOS 26.0, *) {
+            self.glassEffect(
+                .regular.tint(tint).interactive(),
+                in: .rect(cornerRadius: cornerRadius)
+            )
+        } else {
+            self
+        }
     }
 }

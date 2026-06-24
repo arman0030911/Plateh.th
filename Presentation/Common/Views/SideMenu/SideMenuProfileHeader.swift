@@ -44,6 +44,11 @@ struct SideMenuProfileHeader: View {
         .padding(.vertical, 14)
         .background(capsuleBackground)
         .contentShape(RoundedRectangle(cornerRadius: Metrics.cornerRadius))
+        .liquidGlassCapsule(
+            tint: Color.appMint.opacity(0.11),
+            cornerRadius: Metrics.cornerRadius,
+            isInteractive: true
+        )
         .scaleEffect(isPressed ? Metrics.tapScale : 1.0)
         .animation(.easeInOut(duration: Metrics.animationDuration), value: isPressed)
         .onTapGesture(perform: headerTapped)
@@ -138,6 +143,11 @@ struct SideMenuProfileHeader: View {
                     .font(.system(size: 13, weight: .bold))
                     .foregroundColor(Color.appMint)
             }
+            .liquidGlassCapsule(
+                tint: Color.appMint.opacity(0.12),
+                cornerRadius: Metrics.editButtonSize / 2,
+                isInteractive: true
+            )
         }
         .buttonStyle(.plain)
         .accessibilityLabel(user == nil ? "Giriş yap" : "Profili düzenle")
@@ -238,4 +248,25 @@ struct SideMenuProfileHeader: View {
     .environmentObject(AppState.shared)
     .padding()
     .background(Color.appBlack)
+}
+
+private extension View {
+    @ViewBuilder
+    func liquidGlassCapsule(tint: Color, cornerRadius: CGFloat, isInteractive: Bool) -> some View {
+        if #available(iOS 26.0, *) {
+            if isInteractive {
+                self.glassEffect(
+                    .regular.tint(tint).interactive(),
+                    in: .rect(cornerRadius: cornerRadius)
+                )
+            } else {
+                self.glassEffect(
+                    .regular.tint(tint),
+                    in: .rect(cornerRadius: cornerRadius)
+                )
+            }
+        } else {
+            self
+        }
+    }
 }
