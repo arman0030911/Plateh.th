@@ -29,7 +29,7 @@ class AddViewModel: ObservableObject {
 
     @Published var paymentName: String = ""
     @Published var description: String = ""
-    @Published var paymanetAmount: String = ""
+    @Published var paymentAmount: String = ""
     @Published var totalAmount: String = ""
     @Published var date: Date = .now
 
@@ -42,7 +42,7 @@ class AddViewModel: ObservableObject {
     private var validationError: String? {
         let name = paymentName.trimmingCharacters(in: .whitespacesAndNewlines)
         let total = totalAmount.parsedAmountValue
-        let monthly = paymanetAmount.parsedAmountValue
+        let monthly = paymentAmount.parsedAmountValue
 
         if name.isEmpty {
             return "Ödeme adı zorunludur."
@@ -74,7 +74,7 @@ class AddViewModel: ObservableObject {
         do {
             let dayComponent = Calendar.current.component(.day, from: date)
             let parsedTotalAmount = totalAmount.parsedAmountValue
-            let monthlyAmount = max(paymanetAmount.parsedAmountValue, 0)
+            let monthlyAmount = max(paymentAmount.parsedAmountValue, 0)
             let parsedPaymentAmount = payType == .monthly
                 ? (monthlyAmount > 0 ? monthlyAmount : parsedTotalAmount)
                 : parsedTotalAmount

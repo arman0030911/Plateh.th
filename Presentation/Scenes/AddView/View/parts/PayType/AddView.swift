@@ -116,7 +116,7 @@ extension AddView {
                 case .monthly:
                     HStack(spacing: 10) {
                         FieldView(text: $viewModel.totalAmount, placeholder: "Toplam tutar",isTextPrice: true)
-                        FieldView(text:$viewModel.paymanetAmount, placeholder: "Aylık ödeme", isTextPrice: true)
+                        FieldView(text:$viewModel.paymentAmount, placeholder: "Aylık ödeme", isTextPrice: true)
                     }
                 case .oneTime:
                         FieldView(text: $viewModel.totalAmount, placeholder: "Toplam tutar",isTextPrice: true)

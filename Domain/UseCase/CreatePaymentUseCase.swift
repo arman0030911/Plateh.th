@@ -1,6 +1,5 @@
-
-
 import Foundation
+
 protocol CreatePaymentUseCase: AnyObject {
     func execute(payment: Payment) throws
 }
@@ -13,7 +12,7 @@ class CreatePaymentUseCaseImpl: CreatePaymentUseCase {
     }
     
     func execute(payment: Payment ) throws { 
-         
+        
         try repository.createPayment(payment: payment)
     }
 }
